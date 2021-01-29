@@ -4,9 +4,9 @@
 ## Table of contents
 * [Introduction](#introduction)
 * [Technologies](#technologies)
-* [How to run the program](#setup)
-* [Examples of use](#examples)
-* [Bibliography and resources](#bibliography)
+* [How to run the program](#how-to-run-the-program)
+* [Examples of use](#examples-of-use)
+* [Bibliography and resources](#bibliography-and-resources)
 
 
 ## Introduction
