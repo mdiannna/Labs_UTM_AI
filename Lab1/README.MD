@@ -10,10 +10,11 @@
 
 
 ## Introduction
-* Python 3.8.5
+Laboratory 1, Expert System .........
 
 ## Technologies
 Project is created with:
+* Python 3.8.5
 
 ## How to run the program
 To run this project, install it locally ..... 
