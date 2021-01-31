@@ -1,0 +1,7 @@
+Type,Skin Color,Language,Comes from,Nr of legs,Nr of arms,Clothes,Wears sunglasses,Walking speed,Weight,Hair color,Wears mask
+Loonie,gray,Loonian,Luna-City,2,2,,yes,fast,,red,no
+Earthy,pink,English,Earth,2,2,spacesuit,no,slow,,,yes
+Martian,green,Martian,Mars,4,4,shiny,yes,,,,yes
+Jupiterian,orange,Jupiterian,Jupiter,4,2,yellow,yes,fast,heavy,orange,
+Callistian,orange,Jupiterian,Callisto,2,2,yellow,yes,slow,slim,,
+Asteroidian,gray,high_pitched_sounds,Asteroid,4,4,shiny,,fast,slim,gray,
