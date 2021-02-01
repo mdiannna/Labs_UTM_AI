@@ -2,13 +2,12 @@
 
 | Types of tourists/locals  | Rules                                            |
 | ------------------------- | --------------------------------------------     |
-| Loonie                    | Is a local                                       |
-|                           | Speaks Loonian language                          |
+| Loonie                    | Speaks Loonian language                          |
 |                           | Has gray skin                                    |
 |                           | Has 2 legs and 2 arms                            |   
 |                           | Does not wear a mask                             |
 |                           | Wears sunglases                                  |
-|                           | Walks very fast                                  |   
+|                           | Walks fast                                       |   
 |                           | Has red hair                                     |   
 
 | Earthy                    | Comes from Earth                                 |
@@ -17,7 +16,7 @@
 |                           | Has yellow or pink or white or brown skin        |
 |                           | Can speak English                                |
 |                           | Has 2 legs and 2 arms                            |   
-|                           | Walks very slow                                  |   
+|                           | Walks slow                                       |   
 
 
 | Martian                   | Wears a mask                                     |
@@ -37,7 +36,7 @@
 |                           | Speaks Jupiterian language                       |
 |                           | Has 4 legs and 2 arms                            |
 |                           | Wears sunglases                                  |
-|                           | Walks very fast                                  |   
+|                           | Walks fast                                       |   
 
 
 | Callistian                | Lives on Callisto                                |
@@ -45,11 +44,11 @@
 |                           | Lives on a moon of Jupyter                       |
 |                           | Has orange skin                                  |
 |                           | Lives on the second-largest moon of Jupiter      |
-|                           | Wears yellow clothes                     |
+|                           | Wears yellow clothes                             |
 |                           | Speaks Jupiterian language or Callistian dialect |
 |                           | Has 2 legs and 2 arms                            |
 |                           | Wears sunglases                                  |
-|                           | Walks very slow                                  |   
+|                           | Walks slow                                       |   
 
 
 | Asteroidian               | Lives on an asteroid                             |
@@ -59,6 +58,6 @@
 |                           | Wears shiny clothes                              |
 |                           | Communicates with high pitched sounds            |
 |                           | Has 4 legs and 4 arms                            |
-|                           | Walks very fast                                  |   
+|                           | Walks fast                                  |   
 
 

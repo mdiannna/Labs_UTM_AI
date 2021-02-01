@@ -58,10 +58,10 @@ def instantiate(template, values_dict):
 
         return template.__class__(*[populate(x, values_dict) 
                                     for x in template])
-    elif isinstance(template, basestring):
+    # elif isinstance(template, basestring):
+    elif isinstance(template, str):
         return AIStringToPyTemplate(template) % values_dict
-    else: raise ValueError, "Don't know how to populate a %s" % \
-      type(template)
+    else: raise ValueError ("Don't know how to populate a %s" % type(template))
 
 # alternate name for instantiate
 populate = instantiate
@@ -85,7 +85,9 @@ def match(template, AIStr):
 
 def is_variable(str):
     """Is 'str' a variable, of the form '(?x)'?"""
-    return isinstance(str, basestring) and str[0] == '(' and \
+    # return isinstance(str, basestring) and str[0] == '(' and \
+    #   str[-1] == ')' and re.search( AIStringToRegex(str) )
+    return isinstance(str) and str[0] == '(' and \
       str[-1] == ')' and re.search( AIStringToRegex(str) )
 
 def variables(exp):
@@ -125,7 +127,8 @@ class IF(object):
         
         # Allow 'action' to be either a single string or an
         # iterable list of strings
-        if isinstance(action, basestring):
+        # if isinstance(action, basestring):
+        if isinstance(action, str):
             action = [ action ]
 
         self._conditional = conditional
@@ -151,8 +154,8 @@ class IF(object):
                 new_rules.add( populate(a, k) )
                 if len(new_rules) != old_rules_count:
                     if verbose:
-                        print "Rule:", self
-                        print "Added:", populate(a, k)
+                        print("Rule:", self)
+                        print("Added:", populate(a, k))
                     if apply_only_one:
                         return tuple(sorted(new_rules))
             for d in self._delete_clause:
@@ -160,8 +163,8 @@ class IF(object):
                     new_rules.remove( populate(d, k) )
                     if len(new_rules) != old_rules_count:
                         if verbose:
-                            print "Rule:", self
-                            print "Deleted:", populate(d, k)
+                            print("Rule:", self)
+                            print("Deleted:", populate(d, k))
                         if apply_only_one:
                             return tuple(sorted(new_rules))
                 except KeyError:
@@ -223,7 +226,8 @@ class RuleExpression(list):
 
         # Deal with nesting first If we're a nested term, we
         # already have a test function; use it
-        if not isinstance(condition, basestring):
+        # if not isinstance(condition, basestring):
+        if not isinstance(condition, str):
             return condition.test_matches(rules, context_so_far)
 
         # Hm; no convenient test function here

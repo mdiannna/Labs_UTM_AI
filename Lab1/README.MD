@@ -17,7 +17,9 @@ Project is created with:
 * Python 3.8.5
 
 ## How to run the program
-To run this project, install it locally ..... 
+To run this project, open a terminal and run with python3 the file main.py:
+
+```$ python3 main.py```
 
 ## Examples of use
 
