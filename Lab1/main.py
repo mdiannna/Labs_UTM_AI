@@ -1,37 +1,8 @@
 from termcolor import colored
-from production import IF, AND, THEN, OR, DELETE
-from production import forward_chain
-
-# rule1 = IF( AND( '(?x) is a Norwegian Blue parrot',
-#                  '(?x) is motionless' ),
-#             THEN( '(?x) is not dead' ) )
-
-# rule2 = IF( NOT( '(?x) is dead' ),
-#             THEN( '(?x) is pining for the fjords' ) )
-
-
-# theft_rule = IF( 'you have (?x)',
-#     THEN( 'i have (?x)' ),
-#     DELETE( 'you have (?x)' ))
-
-# theft_rule2 = IF( (AND( 'you have (?x)',
-#     'you have 2 (?x)')),
-#     THEN( 'i have (?x)' ),
-#     DELETE( 'you have (?x)' ))
-
-
-# data = ( 'you have apple',
-# 'you have orange',
-# 'you have 2 orange',
-# 'you have pear' )
-
-
-# print (forward_chain([theft_rule2], data, verbose=True))
-
-
+from production import IF, AND, THEN, OR, DELETE, NOT, forward_chain
 
 loonie_rule = IF( AND(
-    # '(?x) speaks Loonian',
+    # '(?x) speaks Loonian language',
     # '(?x) has gray skin',
     '(?x) has 2 legs',
     # '(?x) has 2 arms',
@@ -43,15 +14,56 @@ loonie_rule = IF( AND(
 
 
 earthy_rule = IF( AND(
-    # '(?x) comes from Earth',
     # '(?x) wears a mask',
-    # OR('(?x) wears a white spacesuit', 'wears a blue spacesuit', 'wears an orange spacesuit'),
+    # '(?x) wears a spacesuit',
     # OR('(?x) has yellow skin', 'has pink skin', 'has white skin', 'has brown skin'),
-    # '(?x) can speak English',
-    '(?x) has 2 legs',
-    '(?x) has 2 arms',
+    # '(?x) speaks English language',
+    AND('(?x) has 2 legs', '(?x) has 2 arms'),
     '(?x) walks slow'
     ), THEN('(?x) is an Earthy'))
+
+
+martian_rule = IF( AND(
+    '(?x) wears a mask',
+    '(?x) has green skin',
+    NOT('(?x) wears a spacesuit'),
+    '(?x) wears shiny clothes',
+    '(?x) speaks Martian language',
+    AND('(?x) has 4 legs', '(?x) has 4 arms'),
+    '(?x) wears sunglases'
+    ),THEN('(?x) is a Martian'))
+
+
+jupiterian_rule = IF( AND(
+    '(?x) has orange hair',
+    '(?x) weights very much',
+    '(?x) has orange skin',
+    '(?x) wears yellow clothes'
+    '(?x) speaks Jupiterian language',
+    AND('(?x) has 4 legs', '(?x) has 2 arms'),
+    '(?x) wears sunglasses',
+    '(?x) walks fast',
+    ), THEN( '(?x) is a Jupiterian' ))
+
+callistian_rule = IF( AND(
+    '(?x) is slim',
+    '(?x) has orange skin',
+    '(?x) wears yellow clothes',
+    OR('(?x) speaks Jupiterian language', '(?x) speaks Callistian', '(?x) speaks Callistian dialect'),
+    AND('(?x) has 2 legs', '(?x) has 2 arms'),
+    '(?x) wears sunglasses',
+    '(?x) walks slow',
+    ), THEN( '(?x) is a Callistian' ))
+
+asteroidian_rule = IF( AND(
+    '(?x) has gray skin',
+    '(?x) has gray hair',
+    '(?x) is slim',
+    '(?x) wears shiny clothes',
+    '(?x) comunicates with high pitched sounds',
+    AND('(?x) has 4 legs', '(?x) has 4 arms'),
+    '(?x) walks fast',
+    ), THEN( '(?x) is an Asteroidian' ))
 
 
 # Example usage:
@@ -63,7 +75,7 @@ earthy_rule = IF( AND(
 if __name__=='__main__':
 
     available_facts = ()
-    rules = [earthy_rule, loonie_rule]
+    rules = [loonie_rule, earthy_rule, martian_rule, jupiterian_rule, callistian_rule, asteroidian_rule]
 
     input_val = "*"
     while input_val!='exit()':
@@ -82,7 +94,7 @@ if __name__=='__main__':
 
         elif input_val=='clear()':
             available_facts = ()
-            if available_facts==('d'):
+            if available_facts==():
                 print(colored("---facts cleared---", 'green'))
             else:
                 print(colored("---ERROR: error clearing facts---", "red"))
@@ -92,6 +104,7 @@ if __name__=='__main__':
             print(colored("---available facts:" + str(available_facts), "yellow"))
 
             res = forward_chain(rules, available_facts, verbose=False)
+            # print("----   res for debug: ", res)
             
             if available_facts != res and set(res).difference(set(available_facts))!=set():
                 print(colored("*** answer: ", "green"),set(res).difference(set(available_facts)) )
@@ -113,8 +126,19 @@ if __name__=='__main__':
                         print(colored("   -- Ok :) ---", "blue"))
                     else:
                         print(colored("   -- Didn't understand you, assumed no :) ---", "blue"))
-            res = ()
-            available_facts = ()
+                    
+            
+            print(colored("    !? To clear facts? [Yes or No]", 'blue') )
+            input_y_n = input("   [Yes or No] >> ") 
+            if input_y_n == 'Yes':
+                res = ()
+                available_facts = ()
+            elif input_y_n=='No':
+                print(colored("   -- Ok, facts not cleared ---", "blue"))
+            else:
+                print(colored("   -- Didn't understand you, assumed no, facts not cleared ---", "blue"))
+                
+
             print("----------")
                 
         else:

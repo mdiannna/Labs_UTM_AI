@@ -2,7 +2,8 @@
 
 | Types of tourists/locals  | Rules                                            |
 | ------------------------- | --------------------------------------------     |
-| Loonie                    | Speaks Loonian language                          |
+| Loonie (Local)            |                                                  |
+|                           |Speaks Loonian language                           |
 |                           | Has gray skin                                    |
 |                           | Has 2 legs and 2 arms                            |   
 |                           | Does not wear a mask                             |
@@ -10,16 +11,17 @@
 |                           | Walks fast                                       |   
 |                           | Has red hair                                     |   
 
-| Earthy                    | Comes from Earth                                 |
+| Earthy (Comes from Earth) |                                                  |
 |                           | Wears a mask                                     |
-|                           | Wears a white or blue or orange spacesuit        |
+|                           | Wears a spacesuit                                |
 |                           | Has yellow or pink or white or brown skin        |
-|                           | Can speak English                                |
+|                           | Speaks English                                   |
 |                           | Has 2 legs and 2 arms                            |   
 |                           | Walks slow                                       |   
 
 
-| Martian                   | Wears a mask                                     |
+| Martian  (Comes from Mars)|                                                  | 
+|                           | Wears a mask                                     |
 |                           | Has green skin                                   |
 |                           | Does not wear a spacesuit                        |
 |                           | Wears shiny clothes                              |
@@ -28,7 +30,7 @@
 |                           | Wears sunglases                                  |
 
 
-| Jupiterian                | Comes from Jupiter                               |
+| Jupiterian(Comes from Jupiter) |                                             |
 |                           | Has orange hair                                  |
 |                           | Weights very much                                |
 |                           | Has orange skin                                  |
@@ -39,11 +41,9 @@
 |                           | Walks fast                                       |   
 
 
-| Callistian                | Lives on Callisto                                |
+| Callistian (Comes from Callisto) |                                           |
 |                           | Is slim                                          |
-|                           | Lives on a moon of Jupyter                       |
 |                           | Has orange skin                                  |
-|                           | Lives on the second-largest moon of Jupiter      |
 |                           | Wears yellow clothes                             |
 |                           | Speaks Jupiterian language or Callistian dialect |
 |                           | Has 2 legs and 2 arms                            |
@@ -51,13 +51,13 @@
 |                           | Walks slow                                       |   
 
 
-| Asteroidian               | Lives on an asteroid                             |
+| Asteroidian (Comes from an asteroid)|                                        |
 |                           | Has gray skin                                    |
 |                           | Has gray hair                                    |
 |                           | Is slim                                          |
 |                           | Wears shiny clothes                              |
 |                           | Communicates with high pitched sounds            |
 |                           | Has 4 legs and 4 arms                            |
-|                           | Walks fast                                  |   
+|                           | Walks fast                                       |   
 
 
