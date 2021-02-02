@@ -22,10 +22,13 @@ Project is created with:
 
 ## How to run the program
 To run this project locally, open a terminal and run with python3 the file main.py. Make sure to have python3 installed:
+
 ```$ python3 main.py```
 
 To run in docker:
+
 ```$ docker build -t lab1 . ```
+
 ```$ docker run -it --rm --name lab1-run lab1```
 
 ## Available commands
