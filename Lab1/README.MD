@@ -10,11 +10,12 @@
 
 
 ## Introduction
-Laboratory 1, Expert System .........
+Laboratory 1, Expert System ........., forward chaining and backward chaining, Goal Trees (And/or trees)
 
 ## Technologies
 Project is created with:
 * Python 3.8.5
+* Docker
 
 ## How to run the program
 To run this project, open a terminal and run with python3 the file main.py:

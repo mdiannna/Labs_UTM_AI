@@ -55,9 +55,9 @@ def backward_chain(rules, hypothesis, verbose=False):
         if m != None:
             if verbose:
                 print("match of x:", m["x"])
-            res = populate(rule.antecedent(), m)
+            result = populate(rule.antecedent(), m)
 
-            return res
+            return result
     return "no answer matches your hypothesis, sorry"
 
 
