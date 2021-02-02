@@ -32,7 +32,6 @@ To run in docker:
 ```$ docker run -it --rm --name lab1-run lab1```
 
 ## Available commands
------------Commands:---------
 - help()         -  shows help
 - clear()        -  clears the facts
 - exit()         -  exit the program
