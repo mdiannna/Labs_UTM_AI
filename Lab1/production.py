@@ -46,8 +46,7 @@ def forward_chain(rules, data, apply_only_one=False, verbose=False):
 
 def backward_chain(rules, hypothesis, verbose=False):
     """
-    TODO
-    Output the goal tree from having rules and hyphothesis
+    Outputs the goal tree from having rules and hyphothesis, works like an "encyclopedia"
     """
     for rule in rules:
         c = rule.consequent()

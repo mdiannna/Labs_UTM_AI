@@ -1,18 +1,16 @@
 import sys
-# import re
-import regex as re
 
-
-# print("Python version:", sys.version)
 
 VERSION = 3
 if sys.version[0]=='2':
     VERSION = 2
     from UserDict import DictMixin
+    import re
     # print("2")
 elif sys.version[0]=='3':
     VERSION = 3
     from collections import UserDict
+    import regex as re
     # print("3")
 
 
@@ -98,21 +96,16 @@ elif VERSION==3:
         def keys(self):
             return self._dict.keys()
 
+
 # A regular expression for finding variables.
 AIRegex = re.compile(r'\(\?(\S+)\)')
 
-
-
 def AIStringToRegex(AIStr):
     res =  AIRegex.sub( r'(?P<\1>\S+)', AIStr )+'$'
-    # print("res:", res)
     return res
 
 
-
 def AIStringToPyTemplate(AIStr):
-    # r = AIRegex.sub( r'%(\1)s', AIStr )
-    # print("r2:", r)
     return AIRegex.sub( r'%(\1)s', AIStr )
 
 
