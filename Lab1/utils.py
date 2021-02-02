@@ -3,7 +3,7 @@ import sys
 import regex as re
 
 
-print("Python version:", sys.version)
+# print("Python version:", sys.version)
 
 VERSION = 3
 if sys.version[0]=='2':

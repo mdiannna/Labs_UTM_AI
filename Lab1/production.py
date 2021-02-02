@@ -44,6 +44,23 @@ def forward_chain(rules, data, apply_only_one=False, verbose=False):
 
     return data
 
+def backward_chain(rules, hypothesis, verbose=False):
+    """
+    TODO
+    Output the goal tree from having rules and hyphothesis
+    """
+    for rule in rules:
+        c = rule.consequent()
+        m = match(c[0], hypothesis)
+        if m != None:
+            if verbose:
+                print("match of x:", m["x"])
+            res = populate(rule.antecedent(), m)
+
+            return res
+
+
+
 def instantiate(template, values_dict):
     """
     Given an expression ('template') with variables in it,
