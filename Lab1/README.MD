@@ -29,13 +29,23 @@ To run in docker:
 
 ## Available commands
 -----------Commands:---------
-help()         -  shows help
-clear()        -  clears the facts
-exit()         -  exit the program
-show_facts()   - prints the existing available facts
-show_answer()   - prints the answer based on the  existing available facts
-tell_me_about() - will show facts about hypothesis using backward chaining
+- help()         -  shows help
+- clear()        -  clears the facts
+- exit()         -  exit the program
+- show_facts()   - prints the existing available facts
+- show_answer()   - prints the answer based on the  existing available facts
+- tell_me_about() - will show facts about hypothesis using backward chaining
+
 
 ## Examples of use
+![S1](https://github.com/mdiannna/Labs_UTM_AI/blob/main/Lab1/screenshots/image1.png?raw=true)
+
+![S2](https://github.com/mdiannna/Labs_UTM_AI/blob/main/Lab1/screenshots/image2.png?raw=true)
+
+![S3](https://github.com/mdiannna/Labs_UTM_AI/blob/main/Lab1/screenshots/image3.png?raw=true)
+
+
 
 ## Bibliography and resources
+- UTM Fundamentals of Artificial Intelligence Course
+- [MIT Artificial Intelligence Course](https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-034-artificial-intelligence-fall-2010/index.htm)
