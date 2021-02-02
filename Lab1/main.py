@@ -45,7 +45,7 @@ if __name__=='__main__':
             elif input_val=="show_answer()":
                 print(colored("---available facts:" + str(available_facts), "yellow"))
 
-                res = forward_chain(rules, available_facts, verbose=True)
+                res = forward_chain(rules, available_facts, verbose=False)
                 print("----   res for debug: ", res)
                 
                 if available_facts != res and set(res).difference(set(available_facts))!=set():
