@@ -5,6 +5,7 @@
 * [Introduction](#introduction)
 * [Technologies](#technologies)
 * [How to run the program](#how-to-run-the-program)
+* [Available commands](#available-commands)
 * [Examples of use](#examples-of-use)
 * [Bibliography and resources](#bibliography-and-resources)
 
