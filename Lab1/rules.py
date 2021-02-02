@@ -29,7 +29,7 @@ martian_rule = IF( AND(
     '(?x) wears shiny clothes',
     '(?x) speaks Martian language',
     AND('(?x) has 4 legs', '(?x) has 4 arms'),
-    '(?x) wears sunglases'
+    '(?x) wears sunglasses'
     ),THEN('(?x) is a Martian'))
 
 
@@ -54,12 +54,13 @@ callistian_rule = IF( AND(
     '(?x) walks slow',
     ), THEN( '(?x) is a Callistian' ))
 
+
 asteroidian_rule = IF( AND(
     '(?x) has gray skin',
     '(?x) has gray hair',
     '(?x) is slim',
     '(?x) wears shiny clothes',
-    '(?x) comunicates with high pitched sounds',
+    '(?x) communicates with high pitched sounds',
     AND('(?x) has 4 legs', '(?x) has 4 arms'),
     '(?x) walks fast',
     ), THEN( '(?x) is an Asteroidian' ))

@@ -46,7 +46,7 @@ if __name__=='__main__':
                 print(colored("---available facts:" + str(available_facts), "yellow"))
 
                 res = forward_chain(rules, available_facts, verbose=False)
-                print("----   res for debug: ", res)
+                # print("----   res for debug: ", res)
                 
                 if available_facts != res and set(res).difference(set(available_facts))!=set():
                     print(colored("*** answer: ", "green"),set(res).difference(set(available_facts)) )
@@ -59,16 +59,7 @@ if __name__=='__main__':
                             break
                     if not found:                    
                         print(colored("*** answer: Can't detect the type of tourist", 'magenta') )
-                        # TODO: or use decision tree to compute
-                        print(colored("   !? do you want to use the decision tree algorithm for a possible answer?[Yes or No]", "blue"))
-                        input_y_n = input("   [Yes or No] >> ") 
-                        if input_y_n == 'Yes':
-                            print(colored("  --TODO: use DT", "red"))
-                        elif input_y_n=='No':
-                            print(colored("   -- Ok :) ---", "blue"))
-                        else:
-                            print(colored("   -- Didn't understand you, assumed no :) ---", "blue"))
-                        
+
                 res = ()
                 
                 print(colored("    !? To clear facts? [Yes or No]", 'blue') )
@@ -80,7 +71,6 @@ if __name__=='__main__':
                 else:
                     print(colored("   -- Didn't understand you, assumed no, facts not cleared ---", "blue"))
                     
-
                 print("----------")    
             elif input_val=="tell_me_about()":
                 print(colored("  Write your hypothesis please:", "blue"))
@@ -90,7 +80,5 @@ if __name__=='__main__':
                 print()
             else:
                 available_facts += tuple([input_val])
-                
-    # print(backward_chain(rules, "John is a Martian"))
-
+    
 
