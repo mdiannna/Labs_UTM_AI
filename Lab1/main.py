@@ -2,22 +2,22 @@ from termcolor import colored
 from production import IF, AND, THEN, OR, DELETE, NOT, forward_chain, backward_chain
 
 loonie_rule = IF( AND(
-    # '(?x) speaks Loonian language',
-    # '(?x) has gray skin',
+    '(?x) speaks Loonian language',
+    '(?x) has gray skin',
     '(?x) has 2 legs',
-    # '(?x) has 2 arms',
-    # '(?x) does not wear a mask',
-    # '(?x) wears sunglasses',
+    '(?x) has 2 arms',
+    '(?x) does not wear a mask',
+    '(?x) wears sunglasses',
     '(?x) walks fast',
     '(?x) has red hair'),
     THEN( '(?x) is a Loonie' ))
 
 
 earthy_rule = IF( AND(
-    # '(?x) wears a mask',
-    # '(?x) wears a spacesuit',
-    # OR('(?x) has yellow skin', 'has pink skin', 'has white skin', 'has brown skin'),
-    # '(?x) speaks English language',
+    '(?x) wears a mask',
+    '(?x) wears a spacesuit',
+    OR('(?x) has yellow skin', 'has pink skin', 'has white skin', 'has brown skin'),
+    '(?x) speaks English language',
     AND('(?x) has 2 legs', '(?x) has 2 arms'),
     '(?x) walks slow'
     ), THEN('(?x) is an Earthy'))
@@ -38,7 +38,7 @@ jupiterian_rule = IF( AND(
     '(?x) has orange hair',
     '(?x) weights very much',
     '(?x) has orange skin',
-    '(?x) wears yellow clothes'
+    '(?x) wears yellow clothes',
     '(?x) speaks Jupiterian language',
     AND('(?x) has 4 legs', '(?x) has 2 arms'),
     '(?x) wears sunglasses',
@@ -66,14 +66,10 @@ asteroidian_rule = IF( AND(
     ), THEN( '(?x) is an Asteroidian' ))
 
 
-# Example usage:
-# data = ('tim has 2 legs', 'tim walks slow', 'tim has 2 arms', 'ana has 2 legs', 'ana walks fast', 'ana has red hair')
-# print (forward_chain([earthy_rule, loonie_rule], data, verbose=True))
-
 rules = [loonie_rule, earthy_rule, martian_rule, jupiterian_rule, callistian_rule, asteroidian_rule]
 available_facts = ()
 
-INTERACTIVE = False
+INTERACTIVE = True
 
 if __name__=='__main__':
 
@@ -92,6 +88,8 @@ if __name__=='__main__':
                 print(colored("exit()         -  exit the program", "yellow"))
                 print(colored("show_facts()   - prints the existing available facts", "yellow"))
                 print(colored("show_answer()   - prints the answer based on the  existing available facts", "yellow"))
+                print(colored("tell_me_about() - will show facts about hypothesis using backward chaining", "yellow"))
+
                 print(colored("", "yellow"))
 
             elif input_val=='clear()':
@@ -100,8 +98,12 @@ if __name__=='__main__':
                     print(colored("---facts cleared---", 'green'))
                 else:
                     print(colored("---ERROR: error clearing facts---", "red"))
+                print()
+
             elif input_val=='show_facts()':
                 print(colored("---available facts:" + str(available_facts), "yellow"))
+                print()
+
             elif input_val=="show_answer()":
                 print(colored("---available facts:" + str(available_facts), "yellow"))
 
@@ -141,15 +143,16 @@ if __name__=='__main__':
                     print(colored("   -- Didn't understand you, assumed no, facts not cleared ---", "blue"))
                     
 
-                print("----------")
-                    
+                print("----------")    
+            elif input_val=="tell_me_about()":
+                print(colored("  Write your hypothesis please:", "blue"))
+                input_h = input("   >> ") 
+                r = backward_chain(rules, input_h)
+                print(colored(" ---- I found out that: " + str(r), "green"))
+                print()
             else:
                 available_facts += tuple([input_val])
-                res = forward_chain(rules, available_facts, verbose=False)
                 
-            
-    # from test_bkwd_chain import backward_chain
-
-    print(backward_chain(rules, "John is a Martian"))
+    # print(backward_chain(rules, "John is a Martian"))
 
 

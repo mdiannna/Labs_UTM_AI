@@ -58,6 +58,7 @@ def backward_chain(rules, hypothesis, verbose=False):
             res = populate(rule.antecedent(), m)
 
             return res
+    return "no answer matches your hypothesis, sorry"
 
 
 
