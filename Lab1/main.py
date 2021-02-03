@@ -33,11 +33,31 @@ def clear_facts_or_no(available_facts):
         print(colored("   -- Ok, facts not cleared ---", "blue"))
     else:
         print(colored("   -- Didn't understand you, assumed no, facts not cleared ---", "blue"))
-        
+
     return available_facts
         
+def show_available_commands():
+    print(colored("-----------Commands:---------", "yellow"))
+    print(colored("help()         -  shows help", "yellow"))
+    print(colored("clear()        -  clears the facts", "yellow"))
+    print(colored("exit()         -  exit the program", "yellow"))
+    print(colored("show_facts()   - prints the existing available facts", "yellow"))
+    print(colored("show_answer()   - prints the answer based on the  existing available facts", "yellow"))
+    print(colored("tell_me_about() - will show facts about hypothesis using backward chaining", "yellow"))
+
+    print(colored("", "yellow"))
+
+def show_answer_bkwd_chain(rules):
+    print(colored("  Write your hypothesis please:", "blue"))
+    input_h = input("   >> ") 
+    r = backward_chain(rules, input_h)
+    print(colored(" ---- I found out that: " + str(r), "green"))
+    print()
+    
+    return r
 
 INTERACTIVE = True
+
 
 if __name__=='__main__':
 
@@ -50,15 +70,7 @@ if __name__=='__main__':
             
             print(input_val)
             if input_val=="help()":
-                print(colored("-----------Commands:---------", "yellow"))
-                print(colored("help()         -  shows help", "yellow"))
-                print(colored("clear()        -  clears the facts", "yellow"))
-                print(colored("exit()         -  exit the program", "yellow"))
-                print(colored("show_facts()   - prints the existing available facts", "yellow"))
-                print(colored("show_answer()   - prints the answer based on the  existing available facts", "yellow"))
-                print(colored("tell_me_about() - will show facts about hypothesis using backward chaining", "yellow"))
-
-                print(colored("", "yellow"))
+               show_available_commands()
 
             elif input_val=='clear()':
                 available_facts = ()
@@ -82,11 +94,7 @@ if __name__=='__main__':
 
                 print("----------")    
             elif input_val=="tell_me_about()":
-                print(colored("  Write your hypothesis please:", "blue"))
-                input_h = input("   >> ") 
-                r = backward_chain(rules, input_h)
-                print(colored(" ---- I found out that: " + str(r), "green"))
-                print()
+               show_answer_bkwd_chain(rules)
             else:
                 available_facts += tuple([input_val])
     
