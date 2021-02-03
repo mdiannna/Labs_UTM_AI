@@ -24,7 +24,6 @@ earthy_rule = IF( AND(
 
 martian_rule = IF( AND(
     '(?x) wears a mask',
-    '(?x) has green skin',
     NOT('(?x) wears a spacesuit'),
     '(?x) wears shiny clothes',
     '(?x) speaks Martian language',
@@ -32,6 +31,9 @@ martian_rule = IF( AND(
     '(?x) wears sunglasses'
     ),THEN('(?x) is a Martian'))
 
+
+martian_rule2 = IF('(?x) has green skin',THEN('(?x) is a Martian'))
+    
 
 jupiterian_rule = IF( AND(
     '(?x) has orange hair',

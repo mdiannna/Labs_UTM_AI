@@ -48,6 +48,8 @@ def backward_chain(rules, hypothesis, verbose=False):
     """
     Outputs the goal tree from having rules and hyphothesis, works like an "encyclopedia"
     """
+    results = []
+
     for rule in rules:
         c = rule.consequent()
         m = match(c[0], hypothesis)
@@ -56,7 +58,12 @@ def backward_chain(rules, hypothesis, verbose=False):
                 print("match of x:", m["x"])
             result = populate(rule.antecedent(), m)
 
-            return result
+            results.append(result)
+        
+    # TODO: should be "OR" here
+    if results!=[]:
+        return results
+
     return "no answer matches your hypothesis, sorry"
 
 

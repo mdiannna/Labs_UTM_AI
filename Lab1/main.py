@@ -1,10 +1,10 @@
 from termcolor import colored
 from production import forward_chain, backward_chain
 
-from rules import loonie_rule, earthy_rule, martian_rule, jupiterian_rule, callistian_rule, asteroidian_rule
+from rules import loonie_rule, earthy_rule, martian_rule, jupiterian_rule, callistian_rule, asteroidian_rule, martian_rule2
 
 
-rules = [loonie_rule, earthy_rule, martian_rule, jupiterian_rule, callistian_rule, asteroidian_rule]
+rules = [loonie_rule, earthy_rule, martian_rule,martian_rule2, jupiterian_rule, callistian_rule, asteroidian_rule]
 available_facts = ()
 
 INTERACTIVE = True
