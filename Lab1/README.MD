@@ -11,9 +11,9 @@
 
 
 ## Introduction
-This is the code for the Laboratory 1 for the Fundamentals of Artificial Intelligence course at Technical University of Moldova.
-This laboratory presents an interactive Expert System based on Goal Trees, that is capable of distinguishing between locals of the Luna-City (the "Loonies") and 5 different types of tourists. The system uses Goal Trees (And/or trees), implementing forward chaining as well as backward chaining.
-The forward chaining allows to determine the type of tourists based on dfferent characteristics (or facts), such as clothes, language, nr of legs and arms, hair nd skin color and other. The backward chain allows to see the facts about a type of tourist, given a hypothesis.
+This repository contains the code for the Laboratory 1 for the Fundamentals of Artificial Intelligence course at Technical University of Moldova.
+This laboratory presents an interactive Expert System based on Goal Trees(And/Or Trees), that is capable of distinguishing between locals of the Luna-City (the "Loonies") and 5 different types of tourists. The system uses Goal Trees (And/Or trees), implementing forward chaining as well as backward chaining algorithms.
+The forward chaining allows to determine the type of tourists based on dfferent characteristics (or facts), such as clothes, language, nr of legs and arms, hair and skin color and others. The backward chain allows to see the facts about a type of tourist, given a hypothesis.
 
 ## Technologies
 Project is created with:
