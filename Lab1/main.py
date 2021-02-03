@@ -7,6 +7,36 @@ from rules import loonie_rule, earthy_rule, martian_rule, jupiterian_rule, calli
 rules = [loonie_rule, earthy_rule, martian_rule,martian_rule2, jupiterian_rule, callistian_rule, asteroidian_rule]
 available_facts = ()
 
+
+def show_answer_fwd_chain(rules, available_facts, verbose=False):
+    res = forward_chain(rules, available_facts, verbose=verbose)
+    # print("----   res for debug: ", res)
+    
+    if available_facts != res and set(res).difference(set(available_facts))!=set():
+        print(colored("*** answer: ", "green"),set(res).difference(set(available_facts)) )
+    else:
+        found = False
+        for r in res:
+            if 'is' in r:
+                print(colored("*** answer: ", "green"),r )
+                found = True
+                break
+        if not found:                    
+            print(colored("*** answer: Can't detect the type of tourist", 'magenta') )
+
+def clear_facts_or_no(available_facts):
+    print(colored("    !? To clear facts? [Yes or No]", 'blue') )
+    input_y_n = input("   [Yes or No] >> ") 
+    if input_y_n == 'Yes':
+        available_facts = ()
+    elif input_y_n=='No':
+        print(colored("   -- Ok, facts not cleared ---", "blue"))
+    else:
+        print(colored("   -- Didn't understand you, assumed no, facts not cleared ---", "blue"))
+        
+    return available_facts
+        
+
 INTERACTIVE = True
 
 if __name__=='__main__':
@@ -45,32 +75,11 @@ if __name__=='__main__':
             elif input_val=="show_answer()":
                 print(colored("---available facts:" + str(available_facts), "yellow"))
 
-                res = forward_chain(rules, available_facts, verbose=False)
-                # print("----   res for debug: ", res)
-                
-                if available_facts != res and set(res).difference(set(available_facts))!=set():
-                    print(colored("*** answer: ", "green"),set(res).difference(set(available_facts)) )
-                else:
-                    found = False
-                    for r in res:
-                        if 'is' in r:
-                            print(colored("*** answer: ", "green"),r )
-                            found = True
-                            break
-                    if not found:                    
-                        print(colored("*** answer: Can't detect the type of tourist", 'magenta') )
-
+                res = show_answer_fwd_chain(rules, available_facts)
                 res = ()
                 
-                print(colored("    !? To clear facts? [Yes or No]", 'blue') )
-                input_y_n = input("   [Yes or No] >> ") 
-                if input_y_n == 'Yes':
-                    available_facts = ()
-                elif input_y_n=='No':
-                    print(colored("   -- Ok, facts not cleared ---", "blue"))
-                else:
-                    print(colored("   -- Didn't understand you, assumed no, facts not cleared ---", "blue"))
-                    
+                available_facts = clear_facts_or_no(available_facts)
+
                 print("----------")    
             elif input_val=="tell_me_about()":
                 print(colored("  Write your hypothesis please:", "blue"))
