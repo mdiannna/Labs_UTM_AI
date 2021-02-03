@@ -10,16 +10,15 @@
 |                           | Wears sunglases                                  |
 |                           | Walks fast                                       |   
 |                           | Has red hair                                     |   
-
+| ------------------------- | --------------------------------------------     |
 | Earthy (Comes from Earth) |                                                  |
 |                           | Wears a mask                                     |
 |                           | Wears a spacesuit                                |
 |                           | Has yellow or pink or white or brown skin        |
 |                           | Speaks English                                   |
 |                           | Has 2 legs and 2 arms                            |   
-|                           | Walks slow                                       |   
-
-
+|                           | Walks slow                                       |
+| ------------------------- | --------------------------------------------     |
 | Martian  (Comes from Mars)|                                                  | 
 |                           | Wears a mask                                     |
 |                           | Has green skin                                   |
@@ -28,8 +27,7 @@
 |                           | Speaks Martian language                          |
 |                           | Has 4 legs and 4 arms                            |
 |                           | Wears sunglases                                  |
-
-
+| ------------------------- | --------------------------------------------     |
 | Jupiterian(Comes from Jupiter) |                                             |
 |                           | Has orange hair                                  |
 |                           | Weights very much                                |
@@ -39,8 +37,7 @@
 |                           | Has 4 legs and 2 arms                            |
 |                           | Wears sunglases                                  |
 |                           | Walks fast                                       |   
-
-
+| ------------------------- | --------------------------------------------     |
 | Callistian (Comes from Callisto) |                                           |
 |                           | Is slim                                          |
 |                           | Has orange skin                                  |
@@ -49,8 +46,7 @@
 |                           | Has 2 legs and 2 arms                            |
 |                           | Wears sunglases                                  |
 |                           | Walks slow                                       |   
-
-
+| ------------------------- | --------------------------------------------     |
 | Asteroidian (Comes from an asteroid)|                                        |
 |                           | Has gray skin                                    |
 |                           | Has gray hair                                    |
