@@ -1,5 +1,6 @@
 from termcolor import colored
 from production import forward_chain, backward_chain, populate
+from pprint import pprint
 
 # from rules import loonie_rule, earthy_rule, martian_rule, jupiterian_rule, callistian_rule, asteroidian_rule, martian_rule2
 from rules import all_rules
@@ -62,10 +63,34 @@ def show_available_commands():
     print(colored("", "yellow"))
 
 def show_answer_bkwd_chain(rules):
-    print(colored("  Write your hypothesis please:", "blue"))
+    # print(colored("  Write your hypothesis please:", "blue"))
+    print(colored("  Write the type of tourist please:", "blue"))
+
     input_h = input("   >> ") 
-    r = backward_chain(rules, input_h)
-    print(colored(" ---- I found out that: " + str(r), "green"))
+    input_h = input_h.capitalize()
+    print(colored("input: " + str( input_h), "yellow"))
+    
+    
+    hypothesis = "Tourist is a " + input_h
+    r = backward_chain(rules, hypothesis)
+    
+    # Try the variant with 'an'
+    if r == "no answer matches your hypothesis, sorry":
+        hypothesis = "Tourist is an " + input_h    
+        r = backward_chain(rules, hypothesis)
+    
+    if r == "no answer matches your hypothesis, sorry":
+        print(colored(" ---- I found out that: ", "green"))
+        r = "no informations about this type of tourist, maybe there is a mistake?"
+        print(colored(r, "red"))
+        return r
+    #else
+    # print(colored(" ---- I found out that: " + str(r), "green"))
+    
+    print(colored(" ---- I found out that: ", "green"))
+    print("OR:")
+    pprint( tuple(r))
+
     print()
     
     return r
@@ -96,7 +121,6 @@ if __name__=='__main__':
             input_val = input(">> ").lower() 
 
             # print(input_val)
-
 
             if input_val=="exit()":
                 break

@@ -62,7 +62,7 @@ def backward_chain(rules, hypothesis, verbose=False):
         
     # TODO: should be "OR" here
     if results!=[]:
-        return results
+        return OR(tuple(results))
 
     return "no answer matches your hypothesis, sorry"
 

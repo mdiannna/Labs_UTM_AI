@@ -84,7 +84,7 @@ martian_rule2 = IF('(?x) has green skin',THEN('(?x) is a Martian'))
 
 martien_rule3 = IF(AND(
     '(?x) speaks martian language',
-    '(?x) speaks martian language',
+    NOT('(?x) wears a spacesuit'),
     '(?x) wears shiny clothes'
     ), THEN('(?x) is a Martian'))
 
