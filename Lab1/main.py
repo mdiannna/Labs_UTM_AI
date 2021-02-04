@@ -3,10 +3,11 @@ from production import forward_chain, backward_chain, populate
 from pprint import pprint
 
 # from rules import loonie_rule, earthy_rule, martian_rule, jupiterian_rule, callistian_rule, asteroidian_rule, martian_rule2
+# rules = [loonie_rule, earthy_rule, martian_rule,martian_rule2, jupiterian_rule, callistian_rule, asteroidian_rule]
+
 from rules import all_rules
 from qa import questions_answers
 
-# rules = [loonie_rule, earthy_rule, martian_rule,martian_rule2, jupiterian_rule, callistian_rule, asteroidian_rule]
 rules = all_rules
 
 available_facts = ()
@@ -17,29 +18,45 @@ questions = list(questions_answers.keys())
 INTERACTIVE = True
 
 
-
 def answer_fwd_chain(rules, available_facts, verbose=False):
+    """
+    This function applies forward chain to the available facts and rules, and outputs an
+    answer about the type of the tourist, or "no_answer_found"
+    --------
+    parameters:
+        rules (list) - the list of rules
+        available_facts(tuple) - contains the facts about the tourist
+        verbose(boolean) - outputs more if True (by default, False)
+    --------
+    returns:
+        is_found(bool) - True if an answer was found, False otherwise
+    """
     res = forward_chain(rules, available_facts, verbose=verbose)
-    # print("----   res for debug: ", res)
+
+    if verbose==True:
+        print("----   res for debug: ", res)
     
     if available_facts != res and set(res).difference(set(available_facts))!=set():
-        # print(colored("*** answer: ", "green"), set(res).difference(set(available_facts)) )
         return True, set(res).difference(set(available_facts))
-        # found = True
     else:
-        # found = False
         for r in res:
             if ' is ' in r:
                 return True, r
-                # print(colored("*** answer: ", "green"),r )
-                # found = True
-                
-        # if not found:                    
-            # print(colored("*** answer: Can't detect the type of tourist", 'magenta') )
-
+             
     return False, "no_answer_found"
 
+
 def clear_facts_or_no(available_facts):
+    """ 
+    This function asks the user if to clear facts, and then, 
+    depending on the answer of the user, clears or not the facts
+    --------
+    parameters:
+        available_facts(tuple) - contains the facts about the tourist
+    --------
+    returns:
+        available_facts(tuple) - the cleared (empty) tuple of facts
+    """
     print(colored("    !? To clear facts? [Yes or No]", 'blue') )
     input_y_n = input("   [Yes or No] >> ") 
     if input_y_n == 'Yes':
@@ -51,7 +68,12 @@ def clear_facts_or_no(available_facts):
 
     return available_facts
         
+
 def show_available_commands():
+    """
+    This function prints all the available commands in the console
+    """
+
     print(colored("-----------Commands:---------", "yellow"))
     print(colored("help()         -  shows help", "yellow"))
     print(colored("clear_and_restart()        -  clears the facts and restarts the system", "yellow"))
@@ -62,7 +84,17 @@ def show_available_commands():
 
     print(colored("", "yellow"))
 
+
 def show_answer_bkwd_chain(rules):
+    """
+    The function that applies backward chain to a hypothesis, but first reads the type of tourist from input 
+    and then converts the type of tourist to a hypothesis and outputs all the rules about the tourist, like an encyclopedia
+    --------
+    parameters:
+        rules (list) - the list of rules
+    returns:
+        r (production.OR) - the results, the rules for the given type of tourist
+    """
     # print(colored("  Write your hypothesis please:", "blue"))
     print(colored("  Write the type of tourist please:", "blue"))
 
@@ -84,8 +116,6 @@ def show_answer_bkwd_chain(rules):
         r = "no informations about this type of tourist, maybe there is a mistake?"
         print(colored(r, "red"))
         return r
-    #else
-    # print(colored(" ---- I found out that: " + str(r), "green"))
     
     print(colored(" ---- I found out that: ", "green"))
     print("OR:")
@@ -95,7 +125,13 @@ def show_answer_bkwd_chain(rules):
     
     return r
 
+
 def clear_and_restart():
+    """
+    This function cleans all the available facts, the results obtained in the "res" tuple and resets 
+    the question_nr counter
+    """
+
     global question_nr
     global available_facts
     global res
@@ -145,8 +181,6 @@ if __name__=='__main__':
                 res = show_answer_fwd_chain(rules, available_facts)
                 clear_and_restart()
 
-                # available_facts = clear_facts_or_no(available_facts)
-
                 print("----------")    
             elif input_val=="tell_me_about()":
                 show_answer_bkwd_chain(rules)
@@ -171,9 +205,6 @@ if __name__=='__main__':
 
                 question_nr +=1
 
-                # print(input_val)
-                # available_facts += tuple([input_val])
-
                 print(fact)
                 available_facts += tuple([fact])
 
@@ -192,5 +223,3 @@ if __name__=='__main__':
                 print("----------------")
 
                 clear_and_restart()
-
-            # print("---- question nr:", question_nr)

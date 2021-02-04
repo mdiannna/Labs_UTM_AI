@@ -60,7 +60,6 @@ def backward_chain(rules, hypothesis, verbose=False):
 
             results.append(result)
         
-    # TODO: should be "OR" here
     if results!=[]:
         return OR(tuple(results))
 
