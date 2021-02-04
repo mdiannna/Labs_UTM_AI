@@ -75,12 +75,12 @@ def show_available_commands():
     """
 
     print(colored("-----------Commands:---------", "yellow"))
-    print(colored("help()         -  shows help", "yellow"))
-    print(colored("clear_and_restart()        -  clears the facts and restarts the system", "yellow"))
-    print(colored("exit()         -  exit the program", "yellow"))
-    print(colored("show_facts()   - prints the existing available facts", "yellow"))
-    print(colored("show_answer()   - prints the answer based on the  existing available facts", "yellow"))
-    print(colored("tell_me_about() - will show facts about hypothesis using backward chaining", "yellow"))
+    print(colored("help()                -  shows help", "yellow"))
+    print(colored("clear_and_restart()   -  clears the facts and restarts the system", "yellow"))
+    print(colored("exit()                -  exit the program", "yellow"))
+    print(colored("show_facts()          -  prints the existing available facts", "yellow"))
+    print(colored("show_answer()         -  prints the answer based on the  existing available facts", "yellow"))
+    print(colored("tell_me_about()       -  will show facts about a type of tourist using backward chaining", "yellow"))
 
     print(colored("", "yellow"))
 
