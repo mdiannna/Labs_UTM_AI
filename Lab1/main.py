@@ -102,11 +102,14 @@ def show_answer_bkwd_chain(rules):
 
     input_h = input("   >> ") 
     input_h = input_h.capitalize()
-    print(colored("input: " + str( input_h), "yellow"))
     
     
     hypothesis = "Tourist is a " + input_h
+
+    print(colored("input: " + str( input_h) + "   -- hypothesis: " + hypothesis, "yellow"))
+
     r = backward_chain(rules, hypothesis)
+
     
     # Try the variant with 'an'
     if r == "no answer matches your hypothesis, sorry":
