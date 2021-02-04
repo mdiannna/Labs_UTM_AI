@@ -178,7 +178,16 @@ if __name__=='__main__':
             elif input_val=="show_answer()":
                 print(colored("---available facts:" + str(available_facts), "yellow"))
 
-                res = show_answer_fwd_chain(rules, available_facts)
+                is_found, r = answer_fwd_chain(rules, available_facts)
+
+                print("----------------")
+                if is_found:
+                    print(colored("*** answer: ", "green"), r)
+                else:
+                    print(colored("*** answer: Can't detect the type of tourist", 'red') )
+                print("----------------")
+            
+
                 clear_and_restart()
 
                 print("----------")    
