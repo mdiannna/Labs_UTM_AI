@@ -42,7 +42,7 @@ To run in docker:
 
 ## Examples of use
 
-Accesing the help menu:
+Showing available facts:
 
 ![S1](https://github.com/mdiannna/Labs_UTM_AI/blob/main/Lab1/screenshots/image1.png?raw=true)
 
