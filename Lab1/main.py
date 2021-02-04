@@ -31,6 +31,8 @@ def answer_fwd_chain(rules, available_facts, verbose=False):
     returns:
         is_found(bool) - True if an answer was found, False otherwise
     """
+    print(colored("---available facts:" + str(available_facts), "yellow"))
+
     res = forward_chain(rules, available_facts, verbose=verbose)
 
     if verbose==True:
