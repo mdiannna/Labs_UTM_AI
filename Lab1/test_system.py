@@ -1,10 +1,11 @@
-from rules import loonie_rule, earthy_rule, martian_rule, callistian_rule, jupiterian_rule, asteroidian_rule
+# from rules import loonie_rule, earthy_rule, martian_rule, callistian_rule, jupiterian_rule, asteroidian_rule
 from production import forward_chain, backward_chain
+from rules import all_rules
 
-rules = [loonie_rule, earthy_rule, martian_rule, jupiterian_rule, callistian_rule, asteroidian_rule]
+# rules = [loonie_rule, earthy_rule, martian_rule, jupiterian_rule, callistian_rule, asteroidian_rule]
+rules = all_rules
 
-
-loonie_facts = ('Test_person speaks Loonian language',
+loonie_facts = ('Test_person speaks loonian language',
     'Test_person has gray skin',
     'Test_person has 2 legs',
     'Test_person has 2 arms',
@@ -18,7 +19,7 @@ earthy_facts = (
     'Test_person wears a mask',
     'Test_person wears a spacesuit',
     'Test_person has pink skin',
-    'Test_person speaks English language',
+    'Test_person speaks english language',
     'Test_person has 2 legs', 
     'Test_person has 2 arms',
     'Test_person walks slow')
@@ -28,7 +29,7 @@ martian_facts = (
     'Test_person wears a mask',
     'Test_person has green skin',
     'Test_person wears shiny clothes',
-    'Test_person speaks Martian language',
+    'Test_person speaks martian language',
     'Test_person has 4 legs', 'Test_person has 4 arms',
     'Test_person wears sunglases')
 
@@ -47,7 +48,7 @@ callistian_facts = (
     'Test_person is slim',
     'Test_person has orange skin',
     'Test_person wears yellow clothes',
-    'Test_person speaks Callistian',
+    'Test_person speaks callistian language',
     'Test_person has 2 legs', 
     'Test_person has 2 arms',
     'Test_person wears sunglasses',
