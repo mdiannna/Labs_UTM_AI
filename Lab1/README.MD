@@ -32,20 +32,20 @@ To run in docker:
 ```$ docker run -it --rm --name lab1-run lab1```
 
 ## Available commands
-- help()         -  shows help
-- clear()        -  clears the facts
-- exit()         -  exit the program
-- show_facts()   - prints the existing available facts
-- show_answer()   - prints the answer based on the  existing available facts
-- tell_me_about() - will show facts about hypothesis using backward chaining
+- help()                 - shows help
+- clear_and_restart()    - clears the facts and restarts the system
+- exit()                 - exit the program
+- show_facts()           - prints the existing available facts
+- show_answer()          - prints the answer based on the  existing available facts
+- tell_me_about()        - will show facts about a type of tourist using backward chaining
 
 
 ## Examples of use
 ![S1](https://github.com/mdiannna/Labs_UTM_AI/blob/main/Lab1/screenshots/image1.png?raw=true)
 
-![S2](https://github.com/mdiannna/Labs_UTM_AI/blob/main/Lab1/screenshots/image2.png?raw=true)
-
 ![S3](https://github.com/mdiannna/Labs_UTM_AI/blob/main/Lab1/screenshots/image3.png?raw=true)
+
+![S2](https://github.com/mdiannna/Labs_UTM_AI/blob/main/Lab1/screenshots/image2.png?raw=true)
 
 
 
