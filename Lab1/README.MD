@@ -41,10 +41,16 @@ To run in docker:
 
 
 ## Examples of use
+
+Accesing the help menu:
+
 ![S1](https://github.com/mdiannna/Labs_UTM_AI/blob/main/Lab1/screenshots/image1.png?raw=true)
+
+Using the forward chaining algorithm:
 
 ![S3](https://github.com/mdiannna/Labs_UTM_AI/blob/main/Lab1/screenshots/image3.png?raw=true)
 
+Using the backward chaining algorithm:
 ![S2](https://github.com/mdiannna/Labs_UTM_AI/blob/main/Lab1/screenshots/image2.png?raw=true)
 
 
