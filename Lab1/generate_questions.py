@@ -7,3 +7,7 @@ class QuestionsGenerator():
     def generate_questions(self, rules):
         pass
         # TODO: generate questions based on rules
+        # Examples for generated questions:
+        # Provide suitable category for [color]
+        # Or Yes/no
+        # Or range questions (nr)
