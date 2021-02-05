@@ -31,6 +31,28 @@ loonie_rule3 = IF( AND(
 
 loonie_rules = [loonie_rule_general, loonie_rule2, loonie_rule3]
 
+
+# TODO!: add intermediate rules and include them in all the other rules
+#########################################
+##### Intermediate rules
+#########################################
+
+interm_rule1 = IF( AND (
+    '(?x) wears a mask',    
+    '(?x) wears a spacesuit'
+), THEN ('(?x) breaths air'))
+
+interm_rule1 = IF( AND (
+    '(?x) has 2 legs',
+    '(?x) has 2 arms',
+), THEN ('(?x) is a humanoid_like'))
+
+interm_rule1 = IF( AND (
+    '(?x) has 4 legs',
+    '(?x) has 2 arms',
+), THEN ('(?x) is a insectoid_like'))
+
+intermediate_rules = [ ] #TODO: add all rules here
 #########################################
 #        Earthy rules
 #########################################
