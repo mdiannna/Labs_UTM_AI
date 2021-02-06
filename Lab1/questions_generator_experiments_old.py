@@ -1,6 +1,6 @@
 from rules import all_rules
 from termcolor import colored
-from production import NOT, simplify, match, populate, AND, OR, IF
+from production import NOT, simplify, match, populate
 from pprint import pprint
 import collections
 # from array import *
@@ -13,69 +13,40 @@ import collections
 from fuzzywuzzy import fuzz, process
 
 
-all_conditions = []
-all_conditions_full = []
-
-
 # TODO:
-def extract_conditions_from_rule(rule, verbose=False):
+def extract_conditions_from_rule(rule):
     # print(rule)
     # print()
+    ante = rule.antecedent()
     # print("ante:", ante)
     # print(type(ante))
     # print(list(ante))
     res = []
     not_conditions = []
-
-    if type(rule)==IF:
-        ante = rule.antecedent()
-    else:
-        ante = rule
-
-    if verbose:
-        print("ante:", ante)
-
     if type(ante)==str:
         return [ante], not_conditions
 
     for item in ante:
         if type(item)==str:
+        # try:
+            # item.antecedent()
+        # except:
             res.append(item)
-
         elif type(item)==NOT:
-            item_condition = str(item)[5:-2]
+            print("--", type(item))
            
-                
+            print("str:", str(item))
+            # print(item.replace('NOT(', ''))
+            # print(item[3::-1])
+
+
+            item_condition = str(item)[5:-2]
+            print("item_cond:", item_condition)
+            print("type:", type(item_condition))
             not_conditions.append(item_condition)
             item_transformed_not = item_condition.replace('(?x)', '(?x) does not')
-            
-            if verbose:
-                print("--", type(item))
-                print("str:", str(item))
-                print("item_cond:", item_condition)
-                print("type:", type(item_condition))
-                print("transf not:", item_transformed_not)
-
+            print("transf not:", item_transformed_not)
             # res.append(item_transformed_not)
-        #  !! atentie la recursie!!
-        elif type(item)==OR:
-            print("lst:", list(item))
-            e = extract_conditions_from_rule(item)
-            print(colored("e:(OR) ", "red"), e)
-            res.extend(e[0])
-            not_conditions.extend(e[1])
-            
-        elif type(item)==AND:
-            e = extract_conditions_from_rule(item)
-            print(colored("e:(OR) ", "red"), e)
-            res.extend(e[0])
-            not_conditions.extend(e[1])
-
-        elif type(item)==list:
-            if verbose:
-                print(colored("listitem:"), "red") 
-            print(item)
-            res.extend(item)
 
     # return list(ante)
     return res, not_conditions
@@ -94,29 +65,22 @@ def combine_list_into_str(lst):
 
 # input rules - list, or rule - 1 rule
 def generate_questions(rules):
-    global all_conditions
-    global all_conditions_full
-
-    all_conditions_list = []
+    all_conditions = []
     all_not_conditions = []
 
     for rule in rules:
         print(colored("rule:" + str(rule), "yellow"))
         conditions, not_conditions = extract_conditions_from_rule(rule)
-        all_conditions_full.extend(conditions)
+        all_conditions.extend(conditions)
         all_not_conditions.extend(not_conditions)
         # print()
         # print("ante:", rule.antecedent())
         # print("conseq:", rule.consequent())
         
         print()
-    print(colored("all_contitions full:", "red"))
-    pprint( all_conditions_full)
-
-    # Removing duplicates
-    
-    all_conditions = list(set(all_conditions_full))
     print("all_contitions")
+    # Removing duplicates
+    all_conditions = list(set(all_conditions))
     pprint( all_conditions)
     print()
     print("all_not_contitions")
@@ -168,6 +132,66 @@ if __name__=='__main__':
     generate_questions(rules)
     # print("conditions:", conditions)
     print()
+
+# +TOLOWER + replace numbers with words?? 
+
+# all_conditions = ['(?x) has 2 arms',
+#  '(?x) speaks english language',
+#  '(?x) has gray skin',
+#  '(?x) walks fast',
+#  '(?x) wears sunglasses',
+#  '(?x) speaks jupiterian language',
+#  '(?x) speaks loonian language',
+#  '(?x) has yellow skin',
+#  '(?x) wears shiny clothes',
+#  '(?x) wears a mask',
+#  '(?x) walks slow',
+#  '(?x) speaks high pitched sounds',
+#  '(?x) has orange skin',
+#  '(?x) speaks martian language',
+#  '(?x) communicates with high pitched sounds',
+#  '(?x) wears yellow clothes',
+#  '(?x) is slim',
+#  '(?x) has gray hair',
+#  '(?x) has pink skin',
+#  '(?x) has white skin',
+#  '(?x) weights very much',
+#  '(?x) does not wear a mask',
+#  '(?x) has brown skin',
+#  '(?x) has orange hair',
+#  '(?x) has 2 legs',
+#  '(?x) has green skin',
+#  '(?x) does not wears a spacesuit',
+#  '(?x) wears a spacesuit',
+#  '(?x) has red hair']
+all_conditions = ['(?x) is slim',
+ '(?x) has pink skin',
+ '(?x) has 2 arms',
+ '(?x) has gray skin',
+ '(?x) has orange hair',
+ '(?x) wears yellow clothes',
+ '(?x) wears a mask',
+ '(?x) walks fast',
+ '(?x) wears shiny clothes',
+ '(?x) has yellow skin',
+ '(?x) has 2 legs',
+ '(?x) wears a spacesuit',
+ '(?x) weights very much',
+ '(?x) speaks loonian language',
+ '(?x) speaks jupiterian language',
+ '(?x) has brown skin',
+ '(?x) has green skin',
+ '(?x) speaks english language',
+ '(?x) does not wear a mask',
+ '(?x) speaks martian language',
+ '(?x) has gray hair',
+ '(?x) has red hair',
+ '(?x) has white skin',
+ '(?x) speaks high pitched sounds',
+ '(?x) has orange skin',
+ '(?x) wears sunglasses',
+ '(?x) walks slow',
+ '(?x) communicates with high pitched sounds']
 
 all_conditions = [i.lower().strip() for i in all_conditions]
 all_conditions_repl = [i.replace("(?x)", "").strip() for i in all_conditions]
@@ -271,14 +295,9 @@ print(sorted_d)
 # Se poate pentru constructiile "has x y" de pus Choose the y of tourist from list: [x1, x2, x3]
 has_triplet_conds = []
 all_y_options = {}
-conditions_questions_mapping = {}
-question_indexes = {}
 
 
-# for cond in all_conditions_repl:
-for cond in all_conditions:
-    initial_condition = cond
-    cond = cond.replace("(?x)", "").strip()
+for cond in all_conditions_repl:
     cond_split = cond.split()
     m = match("has (?x) (?y)", cond)
     if m!=None:
@@ -287,25 +306,20 @@ for cond in all_conditions:
         y = m["y"]
         x = m["x"]
         
-        has_triplet_conds.append((initial_condition, x, y))
+        has_triplet_conds.append((cond, x, y,  "q"))
         try:
             int(x)
-        #     question = "How many " + y + "? (write a number)"
-        #     print(colored(question, "blue"))
-        #     conditions_questions_mapping[cond] = question
-
-        #     # TODO: process these type of questions
+            question = "How many " + y + "? (write a number)"
+            print(colored(question, "blue"))
+            # TODO: process these type of questions
         except:
-            conditions_questions_mapping[initial_condition] = "?"
+        
             if not y in all_y_options:
                 all_y_options[y] = set()
             all_y_options[y].add(x)
     else:
-        question = cond.capitalize() + "? [yes(true) or no(false)]"
-        print(colored(question.capitalize(), "blue"))
+        print(colored(cond.capitalize() + "? [yes(true) or no(false)]", "blue"))
         # TODO: process these type of questions & answers + de scos acele cu not
-        conditions_questions_mapping[initial_condition] = question
-
 
   
 for y, x in all_y_options.items():
@@ -313,72 +327,30 @@ for y, x in all_y_options.items():
     print(colored(question, "blue"))
     print()
 
-for cond,x,y in has_triplet_conds:
-    try:
-        int(x)
-        question = "How many " + y + "? (write a number)"
-    except:
-        question = "Choose a category for " + str(y) + " from list: " + str(list(all_y_options[y])) + ""
+# for cond,x,y in has_triplet_conds:
+#     try:
+#         int(x)
+#         question = "How many " + y + "? (write a number)"
+#     except:
+#         question = "Choose a category for " + str(y) + " from list: " + str(list(all_y_options[y])) + ""
+#     print(colored(question, "blue"))
+#     print()
+    
+    # if cond_split[0]=='has' and len(cond_split)==3:
+    #     print(cond)
+    #     has_triplet_conds.append(cond)
+    #     # m = match(cond,"has (?x) (?y)")
+    #     m = match("has (?x) (?y)", cond)
 
-    conditions_questions_mapping[cond] = question
+    #     # re.match( AIStringToRegex(template), 
+    #                     #  AIStr ).groupdict()
+    #     print(m)
+    #     if m!=None:
 
-    print(colored(question, "blue"))
-    print()
 
 print("constructions has x y:")
 print(has_triplet_conds)
 
 
-print("mapping: ")
-pprint(conditions_questions_mapping, width=1000)
-
-
-def calculate_question_indexes(conditions_questions_mapping, all_conditions_full):
-    question_indexes = {} # sau putem pastra sorted deodata
-
-    for condition, question in conditions_questions_mapping.items():
-        q_index = all_conditions_full.count(condition)
-        question_indexes[question] = q_index
-
-    return question_indexes
-
-question_indexes = calculate_question_indexes(conditions_questions_mapping, all_conditions_full)
-print(colored("questions indexes:", "yellow"))
-pprint( question_indexes)
-    
-
-def get_nr_questions_per_rule(rule):
-    conditions, not_conditions = extract_conditions_from_rule(rule)
-    set_questions = set()
-    for c in conditions:
-        set_questions.add(conditions_questions_mapping[c])
-
-    for c in not_conditions:
-        set_questions.add(conditions_questions_mapping[c])
-    print(colored("set of questions required:" + str( set_questions), "yellow"))
-    # return len(conditions) + len(not_conditions)
-    return len(set_questions)
-
-
-for rule in rules:
-    nr_quest = get_nr_questions_per_rule(rule)
-    print("rule:", rule)
-    print("nr of questions required:", nr_quest)
-    print()
 #TODO: alta conditie, x y z - verb adj subst, unde se repeta x si z
 # alta conditie, y x, unde y e verb - walks slow, walks fast, cu conditia ca se repeta y
-
-
-#TODO: need a mapping - rule, questions
-# ca atare ar trebui la fiecare pas sa analizam care atribute ne-ar da entropia cea mai mare, daca am avea un set de date
-# Algorithm:
-# At each iteration, choose a rule/question in the following way:
-# 1. choose the rules that have "then ", "A: is a Martian" consequent
-# 2. see if there is any intermediate rule that has "A: is a Martian" consequent
-# 3. if 2 yes, then choose the intermediate rule with the minimum nr of rules (& questions)
-# 4. choose an intermediate rule, if exists, with minimum nr of questions required(random)
-# 5. choose a rule with minimum nr of questions required (random)
-
-
-# sau question care poate sa acopere mai multe rules
-# question_index

@@ -1,5 +1,13 @@
-import re
+# import re
+import sys
+if sys.version[0]=='2':
+    import re
+  
+elif sys.version[0]=='3':
+    import regex as re
+
 from utils import *
+
 try:
     set()
 except NameError:

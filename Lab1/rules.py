@@ -63,7 +63,7 @@ earthy_rule_general = IF( AND(
     '(?x) wears a spacesuit',
     OR('(?x) has yellow skin', '(?x) has pink skin', '(?x) has white skin', '(?x) has brown skin'),
     '(?x) speaks english language',
-    AND('(?x) has 2 legs', '(?x) has 2 arms'),
+    AND('(?x) has 2 legs', '(?x) has 2 arms', AND('(?x) needs to test')),
     '(?x) walks slow'
     ), THEN('(?x) is an Earthy'))
 
