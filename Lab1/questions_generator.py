@@ -1,6 +1,6 @@
 from rules import all_rules
 from termcolor import colored
-from production import NOT, simplify
+from production import NOT, simplify, match, populate
 from pprint import pprint
 import collections
 # from array import *
@@ -166,7 +166,7 @@ all_conditions = ['(?x) has 2 arms',
  '(?x) has red hair']
 
 all_conditions = [i.lower().strip() for i in all_conditions]
-all_conditions_repl = [i.replace("(?x)", "") for i in all_conditions]
+all_conditions_repl = [i.replace("(?x)", "").strip() for i in all_conditions]
 
 
 print(all_conditions_repl)
@@ -259,3 +259,42 @@ import operator
 sorted_d = dict( sorted(cr.items(), key=operator.itemgetter(1),reverse=True))
 
 print(sorted_d)
+
+
+
+##### Working!!! ############
+# TODO: group all the y into one question
+# Se poate pentru constructiile "has x y" de pus Choose the y of tourist from list: [x1, x2, x3]
+has_triplet_conds = []
+for cond in all_conditions_repl:
+    cond_split = cond.split()
+    m = match("has (?x) (?y)", cond)
+    if m!=None:
+        print(cond)
+        print(m)
+        y = m["y"]
+        x = m["x"]
+        has_triplet_conds.append(cond)
+        
+        try:
+            int(x)
+            question = "How many " + y + "? (write a number)"
+        except:
+            question = "Choose a category for " + str(y) + " from list: [" + str(x) + "]"
+        print(colored(question, "blue"))
+        print()
+    
+    # if cond_split[0]=='has' and len(cond_split)==3:
+    #     print(cond)
+    #     has_triplet_conds.append(cond)
+    #     # m = match(cond,"has (?x) (?y)")
+    #     m = match("has (?x) (?y)", cond)
+
+    #     # re.match( AIStringToRegex(template), 
+    #                     #  AIStr ).groupdict()
+    #     print(m)
+    #     if m!=None:
+
+
+print("constructions has x y:")
+print(has_triplet_conds)
