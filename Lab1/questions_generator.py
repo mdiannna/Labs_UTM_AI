@@ -285,6 +285,7 @@ for rule in rules:
     print()
 
 
+
 #TODO: alta conditie, x y z - verb adj subst, unde se repeta x si z
 # alta conditie, y x, unde y e verb - walks slow, walks fast, cu conditia ca se repeta y
 
@@ -323,6 +324,11 @@ for rule in rules:
 # 2.2  choose a question from list with better index (already sorted)
 # 2.1 sau 2.2
 
+# TODO: if we can distinguish rules, otherwise change step in the algorithm
+# def find_direct_rules(rules, verbose=False):
+#     for rule in rules:
+#         if rule.antecedent()
+#         if 'is a' 
 
 # New alg2:
 # Init: add a questions_to_be_asked list (as Q)
