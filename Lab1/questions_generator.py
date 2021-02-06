@@ -8,13 +8,10 @@ all_conditions = []
 all_conditions_full = []
 
 
-# TODO:
+# TODO: finish the program
+
 def extract_conditions_from_rule(rule, verbose=False):
-    # print(rule)
-    # print()
-    # print("ante:", ante)
-    # print(type(ante))
-    # print(list(ante))
+   
     res = []
     not_conditions = []
 
@@ -50,15 +47,16 @@ def extract_conditions_from_rule(rule, verbose=False):
             # res.append(item_transformed_not)
         #  !! atentie la recursie!!
         elif type(item)==OR:
-            print("lst:", list(item))
             e = extract_conditions_from_rule(item)
-            print(colored("e:(OR) ", "red"), e)
+            if verbose:
+                print(colored("e:(OR) ", "red"), e)
             res.extend(e[0])
             not_conditions.extend(e[1])
             
         elif type(item)==AND:
             e = extract_conditions_from_rule(item)
-            print(colored("e:(OR) ", "red"), e)
+            if verbose:
+                print(colored("e:(OR) ", "red"), e)
             res.extend(e[0])
             not_conditions.extend(e[1])
 
