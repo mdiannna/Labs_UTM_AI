@@ -3,15 +3,6 @@ from termcolor import colored
 from production import NOT, simplify, match, populate, AND, OR, IF
 from pprint import pprint
 import collections
-# from array import *
-
-# alternative:
-# from fuzzy_match import match
-# https://pypi.org/project/fuzzy-match/
-
-# https://pypi.org/project/fuzzywuzzy/
-from fuzzywuzzy import fuzz, process
-
 
 all_conditions = []
 all_conditions_full = []
@@ -114,7 +105,6 @@ def generate_questions(rules):
     pprint( all_conditions_full)
 
     # Removing duplicates
-    
     all_conditions = list(set(all_conditions_full))
     print("all_contitions")
     pprint( all_conditions)
@@ -125,28 +115,7 @@ def generate_questions(rules):
 
     print(type(all_conditions[0]))
 
-    all_similar_groups = set()
-    for condition in all_conditions:
-        similar_r = process.extract(condition, all_conditions)
-        similar_r2 = filter_similarity_results(similar_r)
-        # print(similar_r2)
-        lst_similar_r2 = combine_list_into_str(similar_r2)
-        all_similar_groups.add(lst_similar_r2)
     
-    print("all similar groups:")
-    for i in  all_similar_groups:
-        print(i)
-
-    
-
-
-    # res_similarity = []
-    # for condition1 in all_conditions:
-    #     for condition2 in all_conditions:
-    #         r = fuzz.token_sort_ratio(condition1, condition2)
-    #         res_similarity
-
-
     
 
     # TODO: generate questions based on rules
@@ -192,61 +161,6 @@ c = count_repeating(all_conditions_repl)
 print(c)
 
 
-import nltk
-
-def is_noun(word):
-    if nltk.pos_tag([word])[0][1]=='NN':
-        print(nltk.pos_tag([word])[0][1])
-
-        return True
-
-# is_noun = lambda pos: pos[:2] == 'NN'
-
-
-for word in c.keys():
-    # print(is_noun(word))
-    if is_noun(word):
-        print(word)
-
-
-
-# from textblob import TextBlob
-# # https://textblob.readthedocs.io/en/dev/quickstart.html#noun-phrase-extraction
-# # https://stackoverflow.com/questions/33587667/extracting-all-nouns-from-a-text-file-using-nltk
-
-# condition1 = all_conditions_repl[0]
-# print("condition1:", condition1)
-# blob = TextBlob(condition1)
-# print(blob.noun_phrases)
-
-
-# import nltk
-# lines = 'lines is some string of words'
-# # function to test if something is a noun
-# is_noun = lambda pos: pos[:2] == 'NN'
-# # do the nlp stuff
-# tokenized = nltk.word_tokenize(condition1)
-# nouns = [word for (word, pos) in nltk.pos_tag(tokenized) if is_noun(pos)] 
-# print("nouns:", nouns)
-
-from nltk import word_tokenize
-# Some common structures:
-#combinations: orange skin - Adj + noun
-# wears yellow clothes, wears green ...     verb + adj + noun
-# speaks english, speaks martian, etc verb + noun
-# walks fast, walks slow: verb + adverb
-
-#presupunem ca avem lista de culori
-
-
-# + something cu verbul has
-
-txt = "has orange skin"
-txt = "speaks english language"
-
-text = word_tokenize(txt)
-print(nltk.pos_tag(text))
-
 
 print("analyse has phrases")
 has_conditions = []
@@ -290,11 +204,6 @@ for cond in all_conditions:
         has_triplet_conds.append((initial_condition, x, y))
         try:
             int(x)
-        #     question = "How many " + y + "? (write a number)"
-        #     print(colored(question, "blue"))
-        #     conditions_questions_mapping[cond] = question
-
-        #     # TODO: process these type of questions
         except:
             conditions_questions_mapping[initial_condition] = "?"
             if not y in all_y_options:
@@ -303,7 +212,6 @@ for cond in all_conditions:
     else:
         question = cond.capitalize() + "? [yes(true) or no(false)]"
         print(colored(question.capitalize(), "blue"))
-        # TODO: process these type of questions & answers + de scos acele cu not
         conditions_questions_mapping[initial_condition] = question
 
 
