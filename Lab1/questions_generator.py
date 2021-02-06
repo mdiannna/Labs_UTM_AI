@@ -387,9 +387,12 @@ for rule in rules:
 # ca atare ar trebui la fiecare pas sa analizam care atribute ne-ar da entropia cea mai mare, daca am avea un set de date
 # Algorithm:
 # At each iteration, choose a rule/question in the following way:
-# 1. choose the rules that have "then ", "A: is a Martian" consequent
+# 1. choose the rules that are in the list (mapping), "then ", "A: is a Martian" consequent
 # 2. see if there is any intermediate rule that has "A: is a Martian" consequent
 # 3. if 2 yes, then choose the intermediate rule with the minimum nr of rules (& questions)
+# modified #4 and #5: choose a question from list with better index (already sorted)
+
+#old #4 and #5:
 # 4. choose an intermediate rule, if exists, with minimum nr of questions required(random)
 # 5. choose a rule with minimum nr of questions required (random)
 
@@ -405,3 +408,11 @@ for rule in rules:
 # sau
 # Alg3: (va fi mai rapid de calculat, dar posibil nu cel mai optimal dupa nr de intrebari) Complexitate: 1 daca e sortat, n daca nu
 # la fiecare pas, intreaba intrebarea cu question_index cel mai mare 
+
+
+# New alg:
+# At each iteration, choose a rule/question in the following way:
+# 1. choose the rules that are in the list (mapping), "then ", "A: is a Martian" consequent ("direct rule, not intermediate")
+# 2.1 la fiecare pas, nr of questions required minus card(intersectia quest_required cu questions_asked) pentru fiecare regula
+# 2.2  choose a question from list with better index (already sorted)
+# 2.1 sau 2.2
