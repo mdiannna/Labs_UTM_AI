@@ -265,7 +265,7 @@ sorted_questions = [q[0] for q in sorted_questions_decreasing]
 print(colored("Final list of sorted questions:", "green"))
 pprint(sorted_questions, width=1000)    
 
-def get_nr_questions_per_rule(rule):
+def get_nr_questions_per_rule(rule, conditions_questions_mapping):
     conditions, not_conditions = extract_conditions_from_rule(rule)
     set_questions = set()
     for c in conditions:
@@ -279,7 +279,7 @@ def get_nr_questions_per_rule(rule):
 
 
 for rule in rules:
-    nr_quest = get_nr_questions_per_rule(rule)
+    nr_quest = get_nr_questions_per_rule(rule, conditions_questions_mapping)
     print("rule:", rule)
     print("nr of questions required:", nr_quest)
     print()
