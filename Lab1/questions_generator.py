@@ -322,3 +322,15 @@ for rule in rules:
 # 2.1 la fiecare pas, nr of questions required minus card(intersectia quest_required cu questions_asked) pentru fiecare regula
 # 2.2  choose a question from list with better index (already sorted)
 # 2.1 sau 2.2
+
+
+# New alg2:
+# Init: add a questions_to_be_asked list (as Q)
+# 
+# while answer not found:
+#   if exists, choose the rules that are in the list (mapping), "then ", "A: is a Martian" consequent ("direct rule, not intermediate") (care require 1 question de fapt)
+#   if Q is empty:
+#      se ia regula care necesita cele mai putine intrebari -  nr of quest required minus card(intersectia quest_required cu questions_asked) min pt fiecare regula
+#   else:
+#      din Q se ia question with better index
+#
