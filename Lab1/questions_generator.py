@@ -345,7 +345,19 @@ def calculate_question_indexes(conditions_questions_mapping, all_conditions_full
 question_indexes = calculate_question_indexes(conditions_questions_mapping, all_conditions_full)
 print(colored("questions indexes:", "yellow"))
 pprint( question_indexes)
-    
+print(colored("questions indexes sorted:", "yellow"))
+# sorted_d = dict( sorted(question_indexes.items(), key=operator.itemgetter(1),reverse=True))
+# pprint(sorted(question_indexes))
+# pprint(sorted_d)
+
+sorted_questions_decreasing = sorted(question_indexes.items(), key=lambda x: x[1], reverse=True)
+
+for i in sorted_questions_decreasing:
+	print(i[0], i[1])
+
+sorted_questions = [q[0] for q in sorted_questions_decreasing] 
+print(colored("Final list of sorted questions:", "green"))
+pprint(sorted_questions, width=1000)    
 
 def get_nr_questions_per_rule(rule):
     conditions, not_conditions = extract_conditions_from_rule(rule)
@@ -365,6 +377,8 @@ for rule in rules:
     print("rule:", rule)
     print("nr of questions required:", nr_quest)
     print()
+
+
 #TODO: alta conditie, x y z - verb adj subst, unde se repeta x si z
 # alta conditie, y x, unde y e verb - walks slow, walks fast, cu conditia ca se repeta y
 
@@ -382,3 +396,12 @@ for rule in rules:
 
 # sau question care poate sa acopere mai multe rules
 # question_index
+
+
+#Alg2: 
+# Atentie cat dureaza acest lucru! sa nu dureze prea mult! - Complexitate - nr*nq + intersectia
+# la fiecare pas, nr of questions required minus card(intersectia quest_required cu questions_asked) pentru fiecare regula
+
+# sau
+# Alg3: (va fi mai rapid de calculat, dar posibil nu cel mai optimal dupa nr de intrebari) Complexitate: 1 daca e sortat, n daca nu
+# la fiecare pas, intreaba intrebarea cu question_index cel mai mare 
