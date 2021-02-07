@@ -1,3 +1,8 @@
+#####################
+# Note: this file was an experiment, with different methods for questions generation
+# It will be DELETED in the future
+#####################
+
 from rules import all_rules
 from termcolor import colored
 from production import NOT, simplify, match, populate
