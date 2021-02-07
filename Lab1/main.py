@@ -1,11 +1,11 @@
 from termcolor import colored
-from production import forward_chain, backward_chain, populate
+from production import forward_chain, backward_chain, populate, match
 from pprint import pprint
 
 # from rules import loonie_rule, earthy_rule, martian_rule, jupiterian_rule, callistian_rule, asteroidian_rule, martian_rule2
 # rules = [loonie_rule, earthy_rule, martian_rule,martian_rule2, jupiterian_rule, callistian_rule, asteroidian_rule]
 
-from rules import all_rules
+from rules import all_rules, intermediate_rules
 from qa import questions_answers
 from questions_generator import  get_questions_per_rule, generate_questions
 
@@ -13,7 +13,7 @@ rules = all_rules
 
 available_facts = ()
 res = ()
-question_nr = 0
+# question_nr = 0
 questions = list(questions_answers.keys())
 
 questions_already_asked = set()
@@ -24,7 +24,27 @@ INTERACTIVE = True
 
 X = "Tourist"
 
-def answer_fwd_chain(rules, available_facts, verbose=False):
+
+def matches_intermediate_answer(answer, intermediate_answers):
+    """ 
+    checks if an aswer matches any intermediate answer
+    --------
+    parameters:
+        answer (str) - an answer to be tested
+        intermediate_answers (list of str) - list of the intermediate answers (usually containing (?x))
+    --------
+    returns:
+        _(boolean) - True if answer matches an intermediate answer or False otherwise
+    """
+    for i_answ in intermediate_answers:
+        m = match(i_answ, answer)
+        if m!= None:
+            return True
+    return False
+        
+
+
+def answer_fwd_chain(rules, available_facts, intermediate_answers, verbose=False):
     """
     This function applies forward chain to the available facts and rules, and outputs an
     answer about the type of the tourist, or "no_answer_found"
@@ -44,13 +64,22 @@ def answer_fwd_chain(rules, available_facts, verbose=False):
     if verbose==True:
         print("----   res for debug: ", res)
     
-    if available_facts != res and set(res).difference(set(available_facts))!=set():
-        return True, set(res).difference(set(available_facts))
+    possible_answers = set(res).difference(set(available_facts))
+    
+    answers = set()
+
+    if available_facts != res and possible_answers!=set():
+        for answ in possible_answers:
+            if not matches_intermediate_answer(answ, intermediate_answers):
+                answers.add(answ)
     else:
         for r in res:
-            if ' is ' in r:
-                return True, r
-             
+            if ' is ' in r and (not matches_intermediate_answer(r, intermediate_answers)):
+                answers.add(r)
+
+    if len(answers)>0:
+        return True, answers    
+
     return False, "no_answer_found"
 
 
@@ -139,21 +168,17 @@ def show_answer_bkwd_chain(rules):
 
 def clear_and_restart():
     """
-    This function cleans all the available facts, the results obtained in the "res" tuple and resets 
-    the question_nr counter
+    This function cleans all the available facts, the results obtained in the "res" tuple and resets all the needed variables
     """
 
-    global question_nr
     global available_facts
     global res
     global questions_already_asked
     global questions_to_ask
     global rules_for_questions
 
-    question_nr = 0
     available_facts = ()
     res = ()
-    
     questions_already_asked = set()
     rules_for_questions = list(set(rules))
     questions_to_ask = set()
@@ -162,9 +187,54 @@ def clear_and_restart():
     print()
 
 
+def detect_intermediate_answers(intermediate_rules, verbose=False):
+    """ 
+    Detects the possible intermediate answers, for example '(?x) is an air_breather' 
+    --------
+    parameters:
+        intermediate_rules (list) - the list of intermediate rules
+        verbose (boolean) - if True prints more output
+    --------
+    returns:
+        intermediate_answers (list) - the list of all possible intermediate answers
+    """
+    intermediate_answers = set()
+
+    for rule in intermediate_rules:
+        if verbose:
+            print(list(rule.consequent())[0])
+        intermediate_answers.add(list(rule.consequent())[0])
+
+    return list(intermediate_answers)
+
+
+def print_answer(answer, type="success"):
+    """ 
+    pretty print the answer
+    ---------
+    parameters:
+        answer (str) - the answer to print
+        type (str) - can be either "success" or "error", that will change the output style
+    ---------
+    """
+    if type=="success":
+        print(colored("=========================================", "green"))
+        print(colored("*** answer: " + str(answer), "green"))
+        print(colored("=========================================", "green"))
+    else:
+        print(colored("=========================================", "red"))
+        print(colored("*** " + str(answer), 'red') )
+        print(colored("=========================================", "red"))
+
+
+    
+
+
 if __name__=='__main__':
 
-    conditions_questions_mapping, questions_conditions_mapping, question_indexes = generate_questions(rules)
+    intermediate_answers = detect_intermediate_answers(intermediate_rules)
+    conditions_questions_mapping, questions_conditions_mapping, question_indexes = generate_questions(rules, intermediate_answers)
+
 
     if INTERACTIVE==True:
 
@@ -203,11 +273,9 @@ if __name__=='__main__':
             if len(questions_to_ask)>0:
                 question = questions_to_ask.pop()
                 print(colored("Q:" + question  + " \n(if don't know, write '-', to exit, write 'exit()', for help, write 'help())", "blue"))
-                questions_already_asked.add(question)
 
             if len(rules_for_questions)==0:
-                # print("----- No answer found ---")
-                print(colored("*** answer: Can't detect the type of tourist", 'red') )
+                print_answer("No answer found", type="error")
 
                 clear_and_restart()
                 
@@ -222,6 +290,7 @@ if __name__=='__main__':
                 break
             elif input_val=="help()":
                show_available_commands()
+               questions_to_ask.add(question)
 
             elif input_val=='clear_and_restart()':
                 clear_and_restart()
@@ -234,79 +303,58 @@ if __name__=='__main__':
             elif input_val=='show_facts()':
                 print(colored("---available facts:" + str(available_facts), "yellow"))
                 print()
+                questions_to_ask.add(question)
 
             elif input_val=="show_answer()":
-                print(colored("---available facts:" + str(available_facts), "yellow"))
 
-                is_found, r = answer_fwd_chain(rules, available_facts)
+                is_found, r = answer_fwd_chain(rules, available_facts, intermediate_answers)
 
                 print("----------------")
                 if is_found:
-                    print(colored("*** answer: ", "green"), r)
+                    print_answer(r, "success")
                 else:
-                    print(colored("*** answer: Can't detect the type of tourist", 'red') )
-                print("----------------")
+                    print_answer("No answer found", "error")
             
-
                 clear_and_restart()
 
                 print("----------")    
             elif input_val=="tell_me_about()":
                 show_answer_bkwd_chain(rules)
                 clear_and_restart()
+                questions_to_ask.add(question)
+
             elif input_val.lower().replace(" ", "")=="-":
-                question_nr += 1
+                continue
+
             elif '[yes(true) or no(false)]' in question:
                     input_val = input_val.lower().replace(" ", "")
 
                     if input_val in ["yes", "yes(true)", "true"]:
                         fact = X + " " + question.lower().replace('[yes(true) or no(false)]', '').strip().replace("?", "")
                         print(fact)
+                        print(colored("---added fact:" + fact, "cyan"), )
                         available_facts += tuple([fact])
 
                     elif input_val in ["no", "no(false)", "false"]:
                         fact = ''
-
-                # answer = questions_answers[questions[question_nr]]
-                
-                # if type(answer)==list:
-                #     input_val = input_val.lower().replace(" ", "")
-                #     if input_val=="yes":
-                #         fact = answer[0]
-                #     elif input_val=="no":
-                #         fact = answer[1]
-                #     else:
-                #         print(colored("Didn't understand, please repeat [yes or no]", "red"))
-                #         continue
-                    
-                # else:
-                #     fact = populate(answer, {"a": input_val})
-
-                # question_nr +=1
+                    else:
+                        print(colored("Sorry, didn't understand you, not saved", "red"))
+                        questions_to_ask.add(question)
     
             else:    
-                # TODO:
                 qc = questions_conditions_mapping[question]
                 fact = populate(qc, {"a": input_val, "x": X})
-                print(colored("fact:", "red"), fact)
+                print(colored("---added fact:" + fact, "cyan"), )
                 available_facts += tuple([fact])
 
+            questions_already_asked.add(question)
+
                 
-            is_found, r = answer_fwd_chain(rules, available_facts)
+            is_found, r = answer_fwd_chain(rules, available_facts, intermediate_answers)
 
             if is_found:
-                print("----------------")
-                print(colored("*** answer: ", "green"), r)
-                print("----------------")
-                clear_and_restart()
+                print_answer(r, "success")
 
-            if question_nr >= len(questions) and not is_found:
-                print("----------------")
-                print(colored("*** answer: Can't detect the type of tourist", 'red') )
-                print("----------------")
-
-                clear_and_restart()
-
-           
-            
+                clear_and_restart()          
+                
 

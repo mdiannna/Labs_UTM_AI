@@ -128,10 +128,18 @@ def get_questions_per_rule(rule, conditions_questions_mapping, verbose=False):
     conditions, not_conditions = extract_conditions_from_rule(rule)
     set_questions = set()
     for c in conditions:
-        set_questions.add(conditions_questions_mapping[c])
+        if c in conditions_questions_mapping:
+            set_questions.add(conditions_questions_mapping[c])
+        else:    
+            return set()
+             
 
     for c in not_conditions:
-        set_questions.add(conditions_questions_mapping[c])
+        if c in conditions_questions_mapping:
+            set_questions.add(conditions_questions_mapping[c])
+        else:
+            return set()
+
         
     if verbose:
         print(colored("set of questions required:" + str( set_questions), "yellow"))
@@ -145,7 +153,7 @@ def get_nr_questions_per_rule(rule, conditions_questions_mapping):
 
 
 # input rules - list, or rule - 1 rule
-def generate_questions(rules, verbose=False):
+def generate_questions(rules, intermediate_answers, verbose=False):
     global all_conditions
     global all_conditions_full
     has_triplet_conds = []
@@ -159,26 +167,27 @@ def generate_questions(rules, verbose=False):
 
 
     for cond in all_conditions:
-        initial_condition = cond
-        cond = cond.replace("(?x)", "").strip()
-        cond_split = cond.split()
-        m = match("has (?x) (?y)", cond)
-        if m!=None:
-            y = m["y"]
-            x = m["x"]
-            
-            has_triplet_conds.append((initial_condition, x, y))
-            try:
-                int(x)
-            except:
-                conditions_questions_mapping[initial_condition] = "?"
-                if not y in all_y_options:
-                    all_y_options[y] = set()
-                all_y_options[y].add(x)
-        else:
-            question = cond.capitalize() + "? [yes(true) or no(false)]"
-            # print(colored(question.capitalize(), "blue"))
-            conditions_questions_mapping[initial_condition] = question
+        if cond not in intermediate_answers:
+            initial_condition = cond
+            cond = cond.replace("(?x)", "").strip()
+            cond_split = cond.split()
+            m = match("has (?x) (?y)", cond)
+            if m!=None:
+                y = m["y"]
+                x = m["x"]
+                
+                has_triplet_conds.append((initial_condition, x, y))
+                try:
+                    int(x)
+                except:
+                    conditions_questions_mapping[initial_condition] = "?"
+                    if not y in all_y_options:
+                        all_y_options[y] = set()
+                    all_y_options[y].add(x)
+            else:
+                question = cond.capitalize() + "? [yes(true) or no(false)]"
+                # print(colored(question.capitalize(), "blue"))
+                conditions_questions_mapping[initial_condition] = question
 
 
     for cond,x,y in has_triplet_conds:
