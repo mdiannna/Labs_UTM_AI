@@ -7,6 +7,7 @@ from pprint import pprint
 
 from rules import all_rules
 from qa import questions_answers
+from questions_generator import  get_questions_per_rule, generate_questions
 
 rules = all_rules
 
@@ -150,6 +151,11 @@ def clear_and_restart():
 
 if __name__=='__main__':
 
+    conditions_questions_mapping, question_indexes = generate_questions(rules)
+    questions_already_asked = set()
+    rules_for_questions = list(set(rules))
+    questions_to_ask = set()
+
     if INTERACTIVE==True:
 
         input_val = "*"
@@ -160,7 +166,7 @@ if __name__=='__main__':
                 + " (if don't know, write '-', to exit, write 'exit()', for help, write 'help())", 
                 "blue"))
             input_val = input(">> ").lower() 
-
+    
             # print(input_val)
 
             if input_val=="exit()":
@@ -237,3 +243,38 @@ if __name__=='__main__':
                 print("----------------")
 
                 clear_and_restart()
+
+            ###########################################
+            
+            while(len(questions_to_ask)==0) and len(rules_for_questions)>0:
+                min_nr_rules = 0
+                rule_idx = 0
+                for idx, rule in enumerate(rules_for_questions):
+                    set_questions = get_questions_per_rule(rule, conditions_questions_mapping)
+                    nr_questions = len(set_questions)
+
+                    if min_nr_rules==0:
+                        min_nr_rules = nr_questions
+                    elif min_nr_rules > nr_questions:
+                        min_nr_rules = nr_questions
+                        rule_idx = idx
+                
+                set_questions = get_questions_per_rule(rules_for_questions[rule_idx], conditions_questions_mapping)
+                print(colored("-----rule idx with min nr questions:", "red"), rule_idx)
+                print(colored("-----rule :", "red"), rules_for_questions[rule_idx])
+                print(colored("set of questions:", "red"), set_questions)
+                questions_to_ask = set_questions.difference(questions_already_asked)
+
+                rules_for_questions.remove(rules_for_questions[rule_idx])
+
+            if len(questions_to_ask)>0:
+                question = questions_to_ask.pop()
+                print(colored("Q:" + question, "red"))
+                questions_already_asked.add(question)
+
+            if len(rules_for_questions)==0:
+                print("----- No answer found ---")
+                clear_and_restart()
+                
+            
+

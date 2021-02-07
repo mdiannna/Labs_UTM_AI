@@ -81,24 +81,22 @@ def combine_list_into_str(lst):
     return s.join(lst2)
 
 
-# input rules - list, or rule - 1 rule
-def generate_questions(rules):
-    global all_conditions
-    global all_conditions_full
 
-    all_conditions_list = []
-    all_not_conditions = []
+def extract_all_conditions(rules, verbose=False):
+    all_conditions_full = []
+    all_not_conditions_full = []
 
     for rule in rules:
         print(colored("rule:" + str(rule), "yellow"))
         conditions, not_conditions = extract_conditions_from_rule(rule)
         all_conditions_full.extend(conditions)
-        all_not_conditions.extend(not_conditions)
+        all_not_conditions_full.extend(not_conditions)
         # print()
         # print("ante:", rule.antecedent())
         # print("conseq:", rule.consequent())
         
         print()
+    
     print(colored("all_contitions full:", "red"))
     pprint( all_conditions_full)
 
@@ -108,135 +106,12 @@ def generate_questions(rules):
     pprint( all_conditions)
     print()
     print("all_not_contitions")
-    all_not_conditions = list(set(all_not_conditions))
+    all_not_conditions = list(set(all_not_conditions_full))
     pprint( all_not_conditions)
 
     print(type(all_conditions[0]))
 
-    
-    
-
-    # TODO: generate questions based on rules
-    # Examples for generated questions:
-    # Skin color? - daca detecteaza color from colors_list.txt
-    # Provide suitable category for [color]
-    # Or Yes/no
-    # Or range questions (nr)
-
-    #the rest that remain, ask :
-    # The tourist wears a mask? [yes or no]   '(?x) wears a mask', - just replace (?x) with 'the tourist' and add question mark + [yes or no]
-
-
-from rules import all_rules
-
-rules = all_rules
-if __name__=='__main__':
-    ## q = QuestionsGenerator()
-    generate_questions(rules)
-    # print("conditions:", conditions)
-    print()
-
-all_conditions = [i.lower().strip() for i in all_conditions]
-all_conditions_repl = [i.replace("(?x)", "").strip() for i in all_conditions]
-
-
-print(all_conditions_repl)
-
-
-# https://stackoverflow.com/questions/15238276/counting-the-repeating-of-words-in-a-list-python
-from collections import Counter
-import re
-
-def count_repeating(lst_strings, nr_letters_min=3):
-    # take words containing 3 or more letters
-    reg = re.compile('\S{' + str(nr_letters_min) + ',}')
-
-
-    c = dict(Counter(ma.group() for s in lst_strings for ma in reg.finditer(s) ))
-    return c
-
-c = count_repeating(all_conditions_repl)
-print(c)
-
-
-
-print("analyse has phrases")
-has_conditions = []
-for cond in all_conditions_repl:
-    if 'has' in cond:
-        print(cond)
-        has_conditions.append(cond)
-
-cr = count_repeating(has_conditions)
-print(cr)
-
-import operator
-# https://www.w3resource.com/python-exercises/dictionary/python-data-type-dictionary-exercise-1.php
-sorted_d = dict( sorted(cr.items(), key=operator.itemgetter(1),reverse=True))
-
-print(sorted_d)
-
-
-
-##### Working!!! ############
-# TODO: group all the y into one question
-# Se poate pentru constructiile "has x y" de pus Choose the y of tourist from list: [x1, x2, x3]
-has_triplet_conds = []
-all_y_options = {}
-conditions_questions_mapping = {}
-question_indexes = {}
-
-
-# for cond in all_conditions_repl:
-for cond in all_conditions:
-    initial_condition = cond
-    cond = cond.replace("(?x)", "").strip()
-    cond_split = cond.split()
-    m = match("has (?x) (?y)", cond)
-    if m!=None:
-        print(cond)
-        print(m)
-        y = m["y"]
-        x = m["x"]
-        
-        has_triplet_conds.append((initial_condition, x, y))
-        try:
-            int(x)
-        except:
-            conditions_questions_mapping[initial_condition] = "?"
-            if not y in all_y_options:
-                all_y_options[y] = set()
-            all_y_options[y].add(x)
-    else:
-        question = cond.capitalize() + "? [yes(true) or no(false)]"
-        print(colored(question.capitalize(), "blue"))
-        conditions_questions_mapping[initial_condition] = question
-
-
-  
-for y, x in all_y_options.items():
-    question = "Choose a category for " + str(y) + " from list: " + str(list(all_y_options[y])) + ""
-    print(colored(question, "blue"))
-    print()
-
-for cond,x,y in has_triplet_conds:
-    try:
-        int(x)
-        question = "How many " + y + "? (write a number)"
-    except:
-        question = "Choose a category for " + str(y) + " from list: " + str(list(all_y_options[y])) + ""
-
-    conditions_questions_mapping[cond] = question
-
-    print(colored(question, "blue"))
-    print()
-
-print("constructions has x y:")
-print(has_triplet_conds)
-
-
-print("mapping: ")
-pprint(conditions_questions_mapping, width=1000)
+    return all_conditions_full, all_not_conditions_full, all_conditions, all_not_conditions
 
 
 def calculate_question_indexes(conditions_questions_mapping, all_conditions_full):
@@ -248,24 +123,9 @@ def calculate_question_indexes(conditions_questions_mapping, all_conditions_full
 
     return question_indexes
 
-question_indexes = calculate_question_indexes(conditions_questions_mapping, all_conditions_full)
-print(colored("questions indexes:", "yellow"))
-pprint( question_indexes)
-print(colored("questions indexes sorted:", "yellow"))
-# sorted_d = dict( sorted(question_indexes.items(), key=operator.itemgetter(1),reverse=True))
-# pprint(sorted(question_indexes))
-# pprint(sorted_d)
 
-sorted_questions_decreasing = sorted(question_indexes.items(), key=lambda x: x[1], reverse=True)
 
-for i in sorted_questions_decreasing:
-	print(i[0], i[1])
-
-sorted_questions = [q[0] for q in sorted_questions_decreasing] 
-print(colored("Final list of sorted questions:", "green"))
-pprint(sorted_questions, width=1000)    
-
-def get_nr_questions_per_rule(rule, conditions_questions_mapping):
+def get_questions_per_rule(rule, conditions_questions_mapping):
     conditions, not_conditions = extract_conditions_from_rule(rule)
     set_questions = set()
     for c in conditions:
@@ -275,14 +135,120 @@ def get_nr_questions_per_rule(rule, conditions_questions_mapping):
         set_questions.add(conditions_questions_mapping[c])
     print(colored("set of questions required:" + str( set_questions), "yellow"))
     # return len(conditions) + len(not_conditions)
+    return set_questions
+
+
+def get_nr_questions_per_rule(rule, conditions_questions_mapping):
+    set_questions = get_questions_per_rule(rule, conditions_questions_mapping)    
     return len(set_questions)
 
 
-for rule in rules:
-    nr_quest = get_nr_questions_per_rule(rule, conditions_questions_mapping)
-    print("rule:", rule)
-    print("nr of questions required:", nr_quest)
+# input rules - list, or rule - 1 rule
+def generate_questions(rules):
+    global all_conditions
+    global all_conditions_full
+    has_triplet_conds = []
+    all_y_options = {}
+    conditions_questions_mapping = {}
+    question_indexes = {}
+
+    all_conditions_full, all_not_conditions_full, all_conditions, all_not_conditions = extract_all_conditions(rules)
+    all_conditions = [i.lower().strip() for i in all_conditions]
+
+
+    for cond in all_conditions:
+        initial_condition = cond
+        cond = cond.replace("(?x)", "").strip()
+        cond_split = cond.split()
+        m = match("has (?x) (?y)", cond)
+        if m!=None:
+            print(cond)
+            print(m)
+            y = m["y"]
+            x = m["x"]
+            
+            has_triplet_conds.append((initial_condition, x, y))
+            try:
+                int(x)
+            except:
+                conditions_questions_mapping[initial_condition] = "?"
+                if not y in all_y_options:
+                    all_y_options[y] = set()
+                all_y_options[y].add(x)
+        else:
+            question = cond.capitalize() + "? [yes(true) or no(false)]"
+            # print(colored(question.capitalize(), "blue"))
+            conditions_questions_mapping[initial_condition] = question
+
+
+    
+    # for y, x in all_y_options.items():
+    #     question = "Choose a category for " + str(y) + " from list: " + str(list(all_y_options[y])) + ""
+    #     print(colored(question, "blue"))
+    #     print()
+
+    for cond,x,y in has_triplet_conds:
+        try:
+            int(x)
+            question = "How many " + y + "? (write a number)"
+        except:
+            question = "Choose a category for " + str(y) + " from list: " + str(list(all_y_options[y])) + ""
+
+        conditions_questions_mapping[cond] = question
+
+        # print(colored(question, "blue"))
+        print()
+
+    print("constructions has x y:")
+    print(has_triplet_conds)
+
+
+    print("mapping: ")
+    pprint(conditions_questions_mapping, width=1000)
+
+    question_indexes = calculate_question_indexes(conditions_questions_mapping, all_conditions_full)
+    print(colored("questions indexes:", "yellow"))
+    pprint( question_indexes)
+
+    return conditions_questions_mapping, question_indexes
+
+
+
+
+from rules import all_rules
+
+rules = all_rules
+
+if __name__=='__main__':
+    ## q = QuestionsGenerator()
+    conditions_questions_mapping, question_indexes = generate_questions(rules)
+    # print("conditions:", conditions)
     print()
+
+
+
+# all_conditions_repl = [i.replace("(?x)", "").strip() for i in all_conditions]
+# print(all_conditions_repl)
+
+
+
+#TODO: integrate later, if we need this sort
+# print(colored("questions indexes sorted:", "yellow"))
+# sorted_questions_decreasing = sorted(question_indexes.items(), key=lambda x: x[1], reverse=True)
+
+# for i in sorted_questions_decreasing:
+# 	print(i[0], i[1])
+
+# sorted_questions = [q[0] for q in sorted_questions_decreasing] 
+# print(colored("Final list of sorted questions:", "green"))
+# pprint(sorted_questions, width=1000)    
+
+
+# for rule in rules:
+#     nr_quest = get_nr_questions_per_rule(rule, conditions_questions_mapping)
+#     print("rule:", rule)
+#     print("nr of questions required:", nr_quest)
+#     print()
 
 
 
