@@ -209,7 +209,7 @@ asteroidian_rule2 = IF( AND(
 
 asteroidian_rule3 = IF(
     OR(
-    '(?x) communicates with high pitched sounds',
+    # '(?x) communicates with high pitched sounds',
     '(?x) speaks high pitched sounds'
     ), THEN( '(?x) is an Asteroidian' )
 )

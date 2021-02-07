@@ -86,30 +86,29 @@ def extract_all_conditions(rules, verbose=False):
     all_conditions_full = []
     all_not_conditions_full = []
 
-    for rule in rules:
-        print(colored("rule:" + str(rule), "yellow"))
+    for rule in rules:    
         conditions, not_conditions = extract_conditions_from_rule(rule)
         all_conditions_full.extend(conditions)
         all_not_conditions_full.extend(not_conditions)
         # print()
         # print("ante:", rule.antecedent())
-        # print("conseq:", rule.consequent())
-        
-        print()
+        # print("conseq:", rule.consequent())        
+        # print()
     
-    print(colored("all_contitions full:", "red"))
-    pprint( all_conditions_full)
 
     # Removing duplicates
     all_conditions = list(set(all_conditions_full))
-    print("all_contitions")
-    pprint( all_conditions)
-    print()
-    print("all_not_contitions")
     all_not_conditions = list(set(all_not_conditions_full))
-    pprint( all_not_conditions)
 
-    print(type(all_conditions[0]))
+    if verbose:
+        print("all_contitions")
+        pprint( all_conditions)
+        print()
+        print("all_not_contitions")
+        pprint( all_not_conditions)
+        print(colored("all_contitions full:", "red"))
+        pprint( all_conditions_full)
+
 
     return all_conditions_full, all_not_conditions_full, all_conditions, all_not_conditions
 
@@ -125,7 +124,7 @@ def calculate_question_indexes(conditions_questions_mapping, all_conditions_full
 
 
 
-def get_questions_per_rule(rule, conditions_questions_mapping):
+def get_questions_per_rule(rule, conditions_questions_mapping, verbose=False):
     conditions, not_conditions = extract_conditions_from_rule(rule)
     set_questions = set()
     for c in conditions:
@@ -133,7 +132,9 @@ def get_questions_per_rule(rule, conditions_questions_mapping):
 
     for c in not_conditions:
         set_questions.add(conditions_questions_mapping[c])
-    print(colored("set of questions required:" + str( set_questions), "yellow"))
+        
+    if verbose:
+        print(colored("set of questions required:" + str( set_questions), "yellow"))
     # return len(conditions) + len(not_conditions)
     return set_questions
 
@@ -144,12 +145,13 @@ def get_nr_questions_per_rule(rule, conditions_questions_mapping):
 
 
 # input rules - list, or rule - 1 rule
-def generate_questions(rules):
+def generate_questions(rules, verbose=False):
     global all_conditions
     global all_conditions_full
     has_triplet_conds = []
     all_y_options = {}
     conditions_questions_mapping = {}
+    questions_conditions_mapping = {}
     question_indexes = {}
 
     all_conditions_full, all_not_conditions_full, all_conditions, all_not_conditions = extract_all_conditions(rules)
@@ -162,8 +164,6 @@ def generate_questions(rules):
         cond_split = cond.split()
         m = match("has (?x) (?y)", cond)
         if m!=None:
-            print(cond)
-            print(m)
             y = m["y"]
             x = m["x"]
             
@@ -181,12 +181,6 @@ def generate_questions(rules):
             conditions_questions_mapping[initial_condition] = question
 
 
-    
-    # for y, x in all_y_options.items():
-    #     question = "Choose a category for " + str(y) + " from list: " + str(list(all_y_options[y])) + ""
-    #     print(colored(question, "blue"))
-    #     print()
-
     for cond,x,y in has_triplet_conds:
         try:
             int(x)
@@ -195,22 +189,28 @@ def generate_questions(rules):
             question = "Choose a category for " + str(y) + " from list: " + str(list(all_y_options[y])) + ""
 
         conditions_questions_mapping[cond] = question
+        questions_conditions_mapping[question] = '(?x) has (?a) ' + y
 
-        # print(colored(question, "blue"))
-        print()
-
-    print("constructions has x y:")
-    print(has_triplet_conds)
-
-
-    print("mapping: ")
-    pprint(conditions_questions_mapping, width=1000)
+        if verbose:
+            print(colored(question, "blue"))
+            print()
 
     question_indexes = calculate_question_indexes(conditions_questions_mapping, all_conditions_full)
-    print(colored("questions indexes:", "yellow"))
-    pprint( question_indexes)
 
-    return conditions_questions_mapping, question_indexes
+    if verbose:
+        print("constructions has x y:")
+        print(has_triplet_conds)
+
+        print("mapping: ")
+        pprint(conditions_questions_mapping, width=1000)
+
+        print(colored("questions indexes:", "yellow"))
+        pprint( question_indexes)
+
+    # # Add inverse dictionary - questions_conditions_mapping
+    # questions_conditions_mapping = {v: k for k, v in my_map.items()}
+
+    return conditions_questions_mapping, questions_conditions_mapping, question_indexes
 
 
 
@@ -221,7 +221,8 @@ rules = all_rules
 
 if __name__=='__main__':
     ## q = QuestionsGenerator()
-    conditions_questions_mapping, question_indexes = generate_questions(rules)
+    conditions_questions_mapping, questions_conditions_mapping, question_indexes = generate_questions(rules)
+
     # print("conditions:", conditions)
     print()
 

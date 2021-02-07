@@ -16,8 +16,13 @@ res = ()
 question_nr = 0
 questions = list(questions_answers.keys())
 
+questions_already_asked = set()
+rules_for_questions = list(set(rules))
+questions_to_ask = set()
+
 INTERACTIVE = True
 
+X = "Tourist"
 
 def answer_fwd_chain(rules, available_facts, verbose=False):
     """
@@ -141,20 +146,25 @@ def clear_and_restart():
     global question_nr
     global available_facts
     global res
+    global questions_already_asked
+    global questions_to_ask
+    global rules_for_questions
 
     question_nr = 0
     available_facts = ()
     res = ()
+    
+    questions_already_asked = set()
+    rules_for_questions = list(set(rules))
+    questions_to_ask = set()
+
     print(colored("---System restarted, all cleared---", "yellow"))
     print()
 
 
 if __name__=='__main__':
 
-    conditions_questions_mapping, question_indexes = generate_questions(rules)
-    questions_already_asked = set()
-    rules_for_questions = list(set(rules))
-    questions_to_ask = set()
+    conditions_questions_mapping, questions_conditions_mapping, question_indexes = generate_questions(rules)
 
     if INTERACTIVE==True:
 
@@ -162,9 +172,48 @@ if __name__=='__main__':
         while input_val!='exit()':
 
             # print(colored("Enter your facts:  (to exit, write 'exit()', for help, write 'help()'", 'blue')) # facts sau questions?
-            print(colored("?" + str(question_nr+1) + ": " + questions[question_nr] 
-                + " (if don't know, write '-', to exit, write 'exit()', for help, write 'help())", 
-                "blue"))
+            # print(colored("?" + str(question_nr+1) + ": " + questions[question_nr] 
+            #     + " (if don't know, write '-', to exit, write 'exit()', for help, write 'help())", 
+            #     "blue"))
+            
+            ###########################################
+            
+            while(len(questions_to_ask)==0) and len(rules_for_questions)>0:
+                min_nr_rules = 0
+                rule_idx = 0
+                for idx, rule in enumerate(rules_for_questions):
+                    set_questions = get_questions_per_rule(rule, conditions_questions_mapping)
+                    nr_questions = len(set_questions)
+
+                    if min_nr_rules==0:
+                        min_nr_rules = nr_questions
+                    elif min_nr_rules > nr_questions:
+                        min_nr_rules = nr_questions
+                        rule_idx = idx
+                
+                set_questions = get_questions_per_rule(rules_for_questions[rule_idx], conditions_questions_mapping)
+
+                # print(colored("-----rule idx with min nr questions:", "red"), rule_idx)
+                # print(colored("-----rule :", "red"), rules_for_questions[rule_idx])
+                # print(colored("set of questions:", "red"), set_questions)
+                questions_to_ask = set_questions.difference(questions_already_asked)
+
+                rules_for_questions.remove(rules_for_questions[rule_idx])
+
+            if len(questions_to_ask)>0:
+                question = questions_to_ask.pop()
+                print(colored("Q:" + question  + " \n(if don't know, write '-', to exit, write 'exit()', for help, write 'help())", "blue"))
+                questions_already_asked.add(question)
+
+            if len(rules_for_questions)==0:
+                # print("----- No answer found ---")
+                print(colored("*** answer: Can't detect the type of tourist", 'red') )
+
+                clear_and_restart()
+                
+            #############################################
+
+            
             input_val = input(">> ").lower() 
     
             # print(input_val)
@@ -207,28 +256,42 @@ if __name__=='__main__':
                 clear_and_restart()
             elif input_val.lower().replace(" ", "")=="-":
                 question_nr += 1
-            else:
-                answer = questions_answers[questions[question_nr]]
-                
-                if type(answer)==list:
+            elif '[yes(true) or no(false)]' in question:
                     input_val = input_val.lower().replace(" ", "")
-                    if input_val=="yes":
-                        fact = answer[0]
-                    elif input_val=="no":
-                        fact = answer[1]
-                    else:
-                        print(colored("Didn't understand, please repeat [yes or no]", "red"))
-                        continue
+
+                    if input_val in ["yes", "yes(true)", "true"]:
+                        fact = X + " " + question.lower().replace('[yes(true) or no(false)]', '').strip().replace("?", "")
+                        print(fact)
+                        available_facts += tuple([fact])
+
+                    elif input_val in ["no", "no(false)", "false"]:
+                        fact = ''
+
+                # answer = questions_answers[questions[question_nr]]
+                
+                # if type(answer)==list:
+                #     input_val = input_val.lower().replace(" ", "")
+                #     if input_val=="yes":
+                #         fact = answer[0]
+                #     elif input_val=="no":
+                #         fact = answer[1]
+                #     else:
+                #         print(colored("Didn't understand, please repeat [yes or no]", "red"))
+                #         continue
                     
-                else:
-                    fact = populate(answer, {"a": input_val})
+                # else:
+                #     fact = populate(answer, {"a": input_val})
 
-                question_nr +=1
-
-                print(fact)
+                # question_nr +=1
+    
+            else:    
+                # TODO:
+                qc = questions_conditions_mapping[question]
+                fact = populate(qc, {"a": input_val, "x": X})
+                print(colored("fact:", "red"), fact)
                 available_facts += tuple([fact])
 
-            
+                
             is_found, r = answer_fwd_chain(rules, available_facts)
 
             if is_found:
@@ -244,37 +307,6 @@ if __name__=='__main__':
 
                 clear_and_restart()
 
-            ###########################################
-            
-            while(len(questions_to_ask)==0) and len(rules_for_questions)>0:
-                min_nr_rules = 0
-                rule_idx = 0
-                for idx, rule in enumerate(rules_for_questions):
-                    set_questions = get_questions_per_rule(rule, conditions_questions_mapping)
-                    nr_questions = len(set_questions)
-
-                    if min_nr_rules==0:
-                        min_nr_rules = nr_questions
-                    elif min_nr_rules > nr_questions:
-                        min_nr_rules = nr_questions
-                        rule_idx = idx
-                
-                set_questions = get_questions_per_rule(rules_for_questions[rule_idx], conditions_questions_mapping)
-                print(colored("-----rule idx with min nr questions:", "red"), rule_idx)
-                print(colored("-----rule :", "red"), rules_for_questions[rule_idx])
-                print(colored("set of questions:", "red"), set_questions)
-                questions_to_ask = set_questions.difference(questions_already_asked)
-
-                rules_for_questions.remove(rules_for_questions[rule_idx])
-
-            if len(questions_to_ask)>0:
-                question = questions_to_ask.pop()
-                print(colored("Q:" + question, "red"))
-                questions_already_asked.add(question)
-
-            if len(rules_for_questions)==0:
-                print("----- No answer found ---")
-                clear_and_restart()
-                
+           
             
 
