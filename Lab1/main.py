@@ -2,7 +2,6 @@ from termcolor import colored
 from production import forward_chain, backward_chain, populate, match, AND, OR, IF, NOT, simplify
 from pprint import pprint
 from rules import all_rules, intermediate_rules
-from qa import questions_answers
 from questions_generator import  get_questions_per_rule, generate_questions, extract_conditions_from_rule
 
 
@@ -329,7 +328,6 @@ rules = simplify_rules(rules)
 
 available_facts = ()
 res = ()
-questions = list(questions_answers.keys())
 
 questions_already_asked = set()
 rules_for_questions = list(set(rules))

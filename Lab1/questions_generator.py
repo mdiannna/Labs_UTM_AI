@@ -1,4 +1,4 @@
-from rules import all_rules
+from rules import all_rules, intermediate_rules
 from termcolor import colored
 from production import NOT, simplify, match, populate, AND, OR, IF
 from pprint import pprint
@@ -8,7 +8,6 @@ rules = all_rules
 
 all_conditions = []
 all_conditions_full = []
-
 
 
 def extract_conditions_from_rule(rule, verbose=False):
@@ -273,12 +272,36 @@ def generate_questions(rules, intermediate_answers, verbose=False):
 
 
 
+def detect_intermediate_answers(intermediate_rules, verbose=False):
+    """ 
+    Detects the possible intermediate answers, for example '(?x) is an air_breather' 
+    --------
+    parameters:
+        intermediate_rules (list) - the list of intermediate rules
+        verbose (boolean) - if True prints more output
+    --------
+    returns:
+        intermediate_answers (list) - the list of all possible intermediate answers
+    """
+    intermediate_answers = set()
+
+    for rule in intermediate_rules:
+        if verbose:
+            print(list(rule.consequent())[0])
+        intermediate_answers.add(list(rule.consequent())[0])
+
+    return list(intermediate_answers)
+
+
+
+
 # For testing purposes:
-if __name__=='__main__':
+# if __name__=='__main__':
+#     intermediate_answers = detect_intermediate_answers(intermediate_rules)
 
-    conditions_questions_mapping, questions_conditions_mapping, question_indexes = generate_questions(rules)
-    print("mapping: ")
-    pprint(conditions_questions_mapping, width=1000)
+#     conditions_questions_mapping, questions_conditions_mapping, question_indexes = generate_questions(rules, intermediate_answers)
+#     print("mapping: ")
+#     pprint(conditions_questions_mapping, width=1000)
 
-    print(colored("questions indexes:", "yellow"))
-    pprint( question_indexes)
+#     print(colored("questions indexes:", "yellow"))
+#     pprint( question_indexes)
