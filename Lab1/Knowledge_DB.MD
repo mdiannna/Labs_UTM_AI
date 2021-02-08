@@ -1,4 +1,6 @@
-# The Knowledge Database Description
+# The full Knowledge Database description
+
+## The Rules Initially Provided to the Expert System
 
 | Types of tourists/locals  | Rules                                            |
 | ------------------------- | --------------------------------------------     |
@@ -50,5 +52,16 @@
 |                           | Communicates with high pitched sounds            |
 |                           | Has 4 legs and 4 arms                            |
 |                           | Walks fast                                       |   
+
+
+## The intermediate rules that were created
+
+
+| Types of creatures        | Intermediate Rules                               |
+| ------------------------- | --------------------------------------------     |
+| Air breather              | '(?x) wears a mask' AND '(?x) wears a spacesuit' |
+| Humanoid like             |     '(?x) has 2 legs' AND '(?x) has 2 arms'      |
+| Insectoid like            |     '(?x) has 4 legs' AND '(?x) has 2 arms'      |
+| Spider like               |     '(?x) has 4 legs' AND '(?x) has 4 arms'      |
 
 
