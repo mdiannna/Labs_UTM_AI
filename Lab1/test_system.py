@@ -1,8 +1,10 @@
-# from rules import loonie_rule, earthy_rule, martian_rule, callistian_rule, jupiterian_rule, asteroidian_rule
+#################################################################################################
+# This file is only for some testing purposes, and doesn't test/show the full solution!
+#################################################################################################
+
 from production import forward_chain, backward_chain
 from rules import all_rules
 
-# rules = [loonie_rule, earthy_rule, martian_rule, jupiterian_rule, callistian_rule, asteroidian_rule]
 rules = all_rules
 
 loonie_facts = ('Test_person speaks loonian language',

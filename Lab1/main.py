@@ -1,14 +1,9 @@
 from termcolor import colored
 from production import forward_chain, backward_chain, populate, match, AND, OR, IF, NOT, simplify
 from pprint import pprint
-
-# from rules import loonie_rule, earthy_rule, martian_rule, jupiterian_rule, callistian_rule, asteroidian_rule, martian_rule2
-# rules = [loonie_rule, earthy_rule, martian_rule,martian_rule2, jupiterian_rule, callistian_rule, asteroidian_rule]
-
 from rules import all_rules, intermediate_rules
 from qa import questions_answers
 from questions_generator import  get_questions_per_rule, generate_questions, extract_conditions_from_rule
-
 
 
 
@@ -345,10 +340,7 @@ INTERACTIVE = True
 X = "Tourist"
 
 
-
 if __name__=='__main__':
-
-
 
     intermediate_answers = detect_intermediate_answers(intermediate_rules)
     conditions_questions_mapping, questions_conditions_mapping, question_indexes = generate_questions(rules, intermediate_answers)
@@ -358,13 +350,6 @@ if __name__=='__main__':
 
         input_val = "*"
         while input_val!='exit()':
-
-            # print(colored("Enter your facts:  (to exit, write 'exit()', for help, write 'help()'", 'blue')) # facts sau questions?
-            # print(colored("?" + str(question_nr+1) + ": " + questions[question_nr] 
-            #     + " (if don't know, write '-', to exit, write 'exit()', for help, write 'help())", 
-            #     "blue"))
-            
-            ###########################################
             
             if len(rules_for_questions)==0:
                 print_answer("No answer found", type="error")
