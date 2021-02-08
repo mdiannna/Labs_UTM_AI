@@ -9,20 +9,7 @@ from rules import all_rules, intermediate_rules
 from qa import questions_answers
 from questions_generator import  get_questions_per_rule, generate_questions, extract_conditions_from_rule
 
-rules = all_rules
 
-available_facts = ()
-res = ()
-# question_nr = 0
-questions = list(questions_answers.keys())
-
-questions_already_asked = set()
-rules_for_questions = list(set(rules))
-questions_to_ask = set()
-
-INTERACTIVE = True
-
-X = "Tourist"
 
 
 def simplify_rules(rules):
@@ -36,8 +23,6 @@ def simplify_rules(rules):
     for rule in rules:
         new_rules.append(simplify(rule))
     return new_rules
-
-rules = simplify_rules(rules)
 
 
 
@@ -341,8 +326,29 @@ def print_answer(answer, type="success"):
 
     
 
+###################################
+#     Variable initializations
+###################################
+rules = all_rules
+rules = simplify_rules(rules)
+
+available_facts = ()
+res = ()
+questions = list(questions_answers.keys())
+
+questions_already_asked = set()
+rules_for_questions = list(set(rules))
+questions_to_ask = set()
+
+INTERACTIVE = True
+
+X = "Tourist"
+
+
 
 if __name__=='__main__':
+
+
 
     intermediate_answers = detect_intermediate_answers(intermediate_rules)
     conditions_questions_mapping, questions_conditions_mapping, question_indexes = generate_questions(rules, intermediate_answers)
