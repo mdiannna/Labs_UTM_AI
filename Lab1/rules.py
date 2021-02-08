@@ -1,7 +1,6 @@
 from production import IF, AND, THEN, OR, DELETE, NOT
 
 
-# TODO!: add intermediate rules and include them in all the other rules
 #########################################
 ##### Intermediate rules
 #########################################

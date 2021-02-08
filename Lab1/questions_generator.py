@@ -296,12 +296,15 @@ def detect_intermediate_answers(intermediate_rules, verbose=False):
 
 
 # For testing purposes:
-# if __name__=='__main__':
-#     intermediate_answers = detect_intermediate_answers(intermediate_rules)
+if __name__=='__main__':
+    intermediate_answers = detect_intermediate_answers(intermediate_rules)
 
-#     conditions_questions_mapping, questions_conditions_mapping, question_indexes = generate_questions(rules, intermediate_answers)
-#     print("mapping: ")
-#     pprint(conditions_questions_mapping, width=1000)
+    conditions_questions_mapping, questions_conditions_mapping, question_indexes = generate_questions(rules, intermediate_answers)
+    print("conditions_questions mapping: ")
+    pprint(conditions_questions_mapping, width=1000)
 
-#     print(colored("questions indexes:", "yellow"))
-#     pprint( question_indexes)
+    print("questions_conditions mapping: ")
+    pprint(questions_conditions_mapping, width=1000)
+
+    print(colored("questions indexes:", "yellow"))
+    pprint( question_indexes)
