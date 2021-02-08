@@ -215,7 +215,7 @@ def print_answer(answer, type="success"):
     parameters:
         answer (str) - the answer to print
         type (str) - can be either "success" or "error", that will change the output style
-    ---------
+        ---------
     """
     if type=="success":
         print(colored("=========================================", "green"))

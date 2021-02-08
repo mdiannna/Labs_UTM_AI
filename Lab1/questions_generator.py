@@ -3,14 +3,26 @@ from termcolor import colored
 from production import NOT, simplify, match, populate, AND, OR, IF
 from pprint import pprint
 import collections
+rules = all_rules
+
 
 all_conditions = []
 all_conditions_full = []
 
 
-# TODO: finish the program
 
 def extract_conditions_from_rule(rule, verbose=False):
+    """
+    Extracts all conditions from one rule (for example '(?x) has green skin' is a condition)
+    -----------
+    parameters:
+        rule (production) - the rule to be analyzed
+        verbose (boolean) - if True prints more output
+    -----------
+    returns:
+        res (list of str) - the list of conditions from rule (without NOT conditions)
+        not_conditions  - the list of "NOT" conditions from rule
+    """
    
     res = []
     not_conditions = []
@@ -45,7 +57,7 @@ def extract_conditions_from_rule(rule, verbose=False):
                 print("transf not:", item_transformed_not)
 
             # res.append(item_transformed_not)
-        #  !! atentie la recursie!!
+
         elif type(item)==OR:
             e = extract_conditions_from_rule(item)
             if verbose:
@@ -66,23 +78,24 @@ def extract_conditions_from_rule(rule, verbose=False):
             print(item)
             res.extend(item)
 
-    # return list(ante)
     return res, not_conditions
-
-def filter_similarity_results(res):
-    DELTA = 90
-    res_filtered = [item for item in res if item[1]>DELTA]
-    
-    return res_filtered
-
-def combine_list_into_str(lst):
-    s = ""
-    lst2 = [str(i) for i in lst]
-    return s.join(lst2)
 
 
 
 def extract_all_conditions(rules, verbose=False):
+    """
+    Extracts all conditions from rules (for example '(?x) has green skin' is a condition)
+    -----------
+    parameters:
+        rules (list of productions) - the list of all rules
+        verbose (boolean) - if True prints more output
+    -----------
+    returns:
+        all_conditions_full (list of str) - the list of all conditions (with possible duplicates)
+        all_not_conditions_full (list of str) - the list of all not conditions (with possible duplicates)
+        all_conditions (list of str) - the list of all conditions without duplicates
+        all_not_conditions (list of str) - the list of all not conditions without duplicates
+    """
     all_conditions_full = []
     all_not_conditions_full = []
 
@@ -90,10 +103,6 @@ def extract_all_conditions(rules, verbose=False):
         conditions, not_conditions = extract_conditions_from_rule(rule)
         all_conditions_full.extend(conditions)
         all_not_conditions_full.extend(not_conditions)
-        # print()
-        # print("ante:", rule.antecedent())
-        # print("conseq:", rule.consequent())        
-        # print()
     
 
     # Removing duplicates
@@ -114,6 +123,16 @@ def extract_all_conditions(rules, verbose=False):
 
 
 def calculate_question_indexes(conditions_questions_mapping, all_conditions_full):
+    """
+    Calculates the "qestion indexes" for all questions - (for how many conditions a question can be asked) and will provide an answer
+    -----------
+    parameters:
+        conditions_questions_mapping (dictionary (str,str))- the mapping condition <-> question
+        all_conditions_full (list of str) - the list of all conditions (with possible duplicates)
+    -----------
+    returns:
+        questions_indexes (dictionary (str, int)) - the dictionary containing the question indexes for all questions
+    """
     question_indexes = {} # sau putem pastra sorted deodata
 
     for condition, question in conditions_questions_mapping.items():
@@ -125,6 +144,17 @@ def calculate_question_indexes(conditions_questions_mapping, all_conditions_full
 
 
 def get_questions_per_rule(rule, conditions_questions_mapping, verbose=False):
+    """
+    Finds the set of all the questions needed for a specific rule
+    -----------
+    parameters:
+        rule (production) - the rule to be analyzed
+        conditions_questions_mapping (dictionary (str,str))- the mapping condition <-> question
+        verbose (boolean) - if True prints more output
+    -----------
+    returns:
+        set_questions (set of str) - the set of all the questions needed for the specified rule
+    """
     conditions, not_conditions = extract_conditions_from_rule(rule)
     set_questions = set()
     for c in conditions:
@@ -140,20 +170,43 @@ def get_questions_per_rule(rule, conditions_questions_mapping, verbose=False):
         else:
             return set()
 
-        
     if verbose:
         print(colored("set of questions required:" + str( set_questions), "yellow"))
-    # return len(conditions) + len(not_conditions)
+
     return set_questions
 
 
 def get_nr_questions_per_rule(rule, conditions_questions_mapping):
+    """
+    Calculates the number of questions needed to ask for a specific rule
+    -----------
+    parameters:
+        rule (production) - the rule to be analyzed
+        conditions_questions_mapping (dictionary (str,str))- the mapping condition <-> question
+    -----------
+    returns:
+        _ (int) - the number of questions needed to be asked for the specified rule
+    """
     set_questions = get_questions_per_rule(rule, conditions_questions_mapping)    
     return len(set_questions)
 
 
 # input rules - list, or rule - 1 rule
 def generate_questions(rules, intermediate_answers, verbose=False):
+    """
+    Function to genereate questions for the specified rules
+    -------------
+    parameters:
+        rules (list of productions) - the list of all rules
+        intermediate_answers (list of string) - the list of all possible intermediate answers
+        verbose (boolean) - if True prints more output
+    -------------
+    returns: 
+        conditions_questions_mapping (dictionary (str,str))- the mapping condition <-> question
+        questions_conditions_mapping  (dictionary (str,str)) - the inverse mapping  question <-> condition
+        question_indexes (dictionary (str, int)) - the list of calculated indexes for each question (for how many conditions a question can be asked)
+    """
+
     global all_conditions
     global all_conditions_full
     has_triplet_conds = []
@@ -216,29 +269,19 @@ def generate_questions(rules, intermediate_answers, verbose=False):
         print(colored("questions indexes:", "yellow"))
         pprint( question_indexes)
 
-    # # Add inverse dictionary - questions_conditions_mapping
-    # questions_conditions_mapping = {v: k for k, v in my_map.items()}
-
     return conditions_questions_mapping, questions_conditions_mapping, question_indexes
 
 
 
-
-from rules import all_rules
-
-rules = all_rules
-
+# For testing purposes:
 if __name__=='__main__':
-    ## q = QuestionsGenerator()
+
     conditions_questions_mapping, questions_conditions_mapping, question_indexes = generate_questions(rules)
+    print("mapping: ")
+    pprint(conditions_questions_mapping, width=1000)
 
-    # print("conditions:", conditions)
-    print()
-
-
-
-# all_conditions_repl = [i.replace("(?x)", "").strip() for i in all_conditions]
-# print(all_conditions_repl)
+    print(colored("questions indexes:", "yellow"))
+    pprint( question_indexes)
 
 
 
@@ -314,5 +357,5 @@ if __name__=='__main__':
 #   if Q is empty:
 #      se ia regula care necesita cele mai putine intrebari -  nr of quest required minus card(intersectia quest_required cu questions_asked) min pt fiecare regula
 #   else:
-#      din Q se ia question with better index
+#      ///din Q se ia question with better index
 #
