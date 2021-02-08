@@ -64,4 +64,56 @@
 | Insectoid like            |     '(?x) has 4 legs' AND '(?x) has 2 arms'      |
 | Spider like               |     '(?x) has 4 legs' AND '(?x) has 4 arms'      |
 
+## The final direct rules
+
+| Types of tourists/locals  | Rules                                            |
+| ------------------------- | --------------------------------------------     |
+| Loonie (Local)            |                                                  |
+|                           | Speaks Loonian language                          |
+|                           | Has gray skin                                    |
+|                           | Is a Humanoid like                               |   
+|                           | Does not wear a mask                             |
+|                           | Wears sunglases                                  |
+|                           | Walks fast                                       |   
+|                           | Has red hair                                     |   
+| Earthy (Comes from Earth) |                                                  |
+|                           | Is an Air Breather                               |
+|                           | Has yellow or pink or white or brown skin        |
+|                           | Speaks English                                   |
+|                           | Is a Humanoid like                               |   
+|                           | Walks slow                                       |
+| Martian  (Comes from Mars)|                                                  | 
+|                           | Wears a mask                                     |
+|                           | Has green skin                                   |
+|                           | Does not wear a spacesuit                        |
+|                           | Wears shiny clothes                              |
+|                           | Speaks Martian language                          |
+|                           | Is a Spider like                                 |
+|                           | Wears sunglasses                                 |
+| Jupiterian(Comes from Jupiter) |                                             |
+|                           | Has orange hair                                  |
+|                           | Weights very much                                |
+|                           | Has orange skin                                  |
+|                           | Wears yellow clothes                             |
+|                           | Speaks Jupiterian language                       |
+|                           | Is an Insectoid like                             |
+|                           | Wears sunglasses                                 |
+|                           | Walks fast                                       |   
+| Callistian (Comes from Callisto) |                                           |
+|                           | Is slim                                          |
+|                           | Has orange skin                                  |
+|                           | Wears yellow clothes                             |
+|                           | Speaks Jupiterian language or Callistian dialect |
+|                           | Is a Humanoid like                               |
+|                           | Wears sunglases                                  |
+|                           | Walks slow                                       |   
+| Asteroidian (Comes from an asteroid)|                                        |
+|                           | Has gray skin                                    |
+|                           | Has gray hair                                    |
+|                           | Is slim                                          |
+|                           | Wears shiny clothes                              |
+|                           | Communicates with high pitched sounds            |
+|                           | Is a Spider like                                 |
+|                           | Walks fast                                       |   
+
 
