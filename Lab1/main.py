@@ -1,5 +1,5 @@
 from termcolor import colored
-from production import forward_chain, backward_chain, populate, match
+from production import forward_chain, backward_chain, populate, match, AND, OR, IF, NOT, simplify
 from pprint import pprint
 
 # from rules import loonie_rule, earthy_rule, martian_rule, jupiterian_rule, callistian_rule, asteroidian_rule, martian_rule2
@@ -7,7 +7,7 @@ from pprint import pprint
 
 from rules import all_rules, intermediate_rules
 from qa import questions_answers
-from questions_generator import  get_questions_per_rule, generate_questions
+from questions_generator import  get_questions_per_rule, generate_questions, extract_conditions_from_rule
 
 rules = all_rules
 
@@ -23,6 +23,22 @@ questions_to_ask = set()
 INTERACTIVE = True
 
 X = "Tourist"
+
+
+def simplify_rules(rules):
+    """
+    Simplifies the AND-OR tree for each rule from rules list
+    -------
+    parameters:
+        rules(list of productions) - the list of rules to be simplified
+    """
+    new_rules = []
+    for rule in rules:
+        new_rules.append(simplify(rule))
+    return new_rules
+
+rules = simplify_rules(rules)
+
 
 
 def matches_intermediate_answer(answer, intermediate_answers):
@@ -122,6 +138,94 @@ def show_available_commands():
     print(colored("", "yellow"))
 
 
+def print_green(s):
+    """
+    Shortcut function to print some string in green color
+    -------
+    parameters:
+        s(str) - the string to be printed
+    """
+    print(colored(s, "green"))
+
+
+def print_red(s):
+    """
+    Shortcut function to print some string in red color
+    -------
+    parameters:
+        s(str) - the string to be printed
+    """
+    print(colored(s, "red"))
+
+
+
+def print_bkwd_chain_result_human_readable(rule, verbose=False):
+    """
+    Important note: The result will always be an "OR" production, because it will show all the possible rules, and the tree simplified
+    """
+    print_green("===== One of the following options are true for the " + str(X) + " ======== :")
+    res = []
+    not_conditions = []
+
+    if type(rule)==IF:
+        ante = rule.antecedent()
+        print_green("IF ")
+    else:
+        ante = rule
+        
+    if verbose:
+        print("ante:", ante)
+
+    if type(ante)==str:
+        # print_green(ante)
+        return [ante], not_conditions
+
+    for item in ante:
+        if type(item)==str:
+            print_green(" * " + item)
+            res.append(item)
+
+        elif type(item)==NOT:
+            item_condition = str(item)[5:-2]
+            print_green("NOT (" + item_condition + ")")
+
+            not_conditions.append(item_condition)
+            item_transformed_not = item_condition.replace('(?x)', '(?x) does not')
+            
+            if verbose:
+                print("--", type(item))
+                print("str:", str(item))
+                print("item_cond:", item_condition)
+                print("type:", type(item_condition))
+                print("transf not:", item_transformed_not)
+
+            # res.append(item_transformed_not)
+
+        elif type(item)==OR:
+            e = extract_conditions_from_rule(item)
+            if verbose:
+                print(colored("e:(OR) ", "red"), e)
+            res.extend(e[0])
+            
+            print_green(" * " + " OR ".join(e[0]))
+            not_conditions.extend(e[1])
+            
+        elif type(item)==AND:
+            e = extract_conditions_from_rule(item)
+            if verbose:
+                print(colored("e:(AND) ", "red"), e)
+            res.extend(e[0])
+            not_conditions.extend(e[1])
+            print_green(" * " + " AND ".join(e[0]))
+
+        elif type(item)==list:
+            if verbose:
+                print(colored("listitem:"), "red") 
+            print(item)
+            res.extend(item)
+
+    return res, not_conditions
+
 def show_answer_bkwd_chain(rules):
     """
     The function that applies backward chain to a hypothesis, but first reads the type of tourist from input 
@@ -159,7 +263,15 @@ def show_answer_bkwd_chain(rules):
     
     print(colored(" ---- I found out that: ", "green"))
     print("OR:")
-    pprint( tuple(r))
+    # pprint( tuple(r))
+    # pprint(list(r), width=1)
+    for item in r:
+        pprint(item)
+
+    print_green("---------- Human readable: ----------")
+    print_bkwd_chain_result_human_readable(r)
+    print_green("------------")
+
 
     print()
     
@@ -248,6 +360,11 @@ if __name__=='__main__':
             
             ###########################################
             
+            if len(rules_for_questions)==0:
+                print_answer("No answer found", type="error")
+
+                clear_and_restart()
+
             while(len(questions_to_ask)==0) and len(rules_for_questions)>0:
                 min_nr_rules = 0
                 rule_idx = 0
@@ -274,10 +391,7 @@ if __name__=='__main__':
                 question = questions_to_ask.pop()
                 print(colored("Q:" + question  + " \n(if don't know, write '-', to exit, write 'exit()', for help, write 'help())", "blue"))
 
-            if len(rules_for_questions)==0:
-                print_answer("No answer found", type="error")
-
-                clear_and_restart()
+          
                 
             #############################################
 
@@ -324,6 +438,7 @@ if __name__=='__main__':
                 questions_to_ask.add(question)
 
             elif input_val.lower().replace(" ", "")=="-":
+                questions_already_asked.add(question)
                 continue
 
             elif '[yes(true) or no(false)]' in question:

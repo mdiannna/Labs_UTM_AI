@@ -68,7 +68,7 @@ def extract_conditions_from_rule(rule, verbose=False):
         elif type(item)==AND:
             e = extract_conditions_from_rule(item)
             if verbose:
-                print(colored("e:(OR) ", "red"), e)
+                print(colored("e:(AND) ", "red"), e)
             res.extend(e[0])
             not_conditions.extend(e[1])
 

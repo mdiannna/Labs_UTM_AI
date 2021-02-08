@@ -69,7 +69,7 @@ def backward_chain(rules, hypothesis, verbose=False):
             results.append(result)
         
     if results!=[]:
-        return OR(tuple(results))
+        return simplify(OR(results))
 
     return "no answer matches your hypothesis, sorry"
 
@@ -405,7 +405,8 @@ def uniq(lst):
     seen = {}
     result = []
     for item in lst:
-        if not seen.has_key(str(item)):
+        # if not seen.has_key(str(item)):
+        if not str(item) in seen:
             result.append(item)
             seen[str(item)]=True
     return result
