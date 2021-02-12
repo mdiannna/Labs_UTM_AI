@@ -1,0 +1,1 @@
+# Code for Lab2 for the Fundamentals of AI Course at Technical University of Moldova, Flocking Behaviour
