@@ -20,6 +20,17 @@ class Boid():
         pass
         # TODO
     
+    def moveTo(self, new_x, new_y):
+        """ move towards position new_x, new_y """
+        pass
+        # TODO
+    
+    def moveBy(self, offset_x, offset_y):
+        """ move by offset_x and offset_y """
+        pass
+        # TODO
+        
+    
     @property
     def x(self):
         return self.__x
