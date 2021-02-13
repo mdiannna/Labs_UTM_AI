@@ -5,10 +5,43 @@ class Boid():
         self.__y = initial_y
         # TODO
     
-    def separation():
+    def calculateDistance(pos1, pos2, distance="euclidean"):
+        """ calculates the distance between 2 objects """
+        dist = sqrt((pos1[0]-pos2[0])^2 + (pos1[1]-pos2[1])^2)
+        return dist
+
+    
+    def separation(current_pos, all_rocks_positions):
         """ steer to avoid crowding neighbours (short range repulsion) """
-        pass
-        # TODO
+        #min distance between rocks required
+        delta_distance = 2
+
+        # close_rocks = []
+        # for i in range(len(all_rocks_positions)):
+        #     for j in range(i+1, len(all_rocks_positions)):
+        #         dist_i_j = calculateDistance(rock_position_i, rock_position_j)
+        #         if dist_i_j < delta_distance:
+        #             close_rocks.append([i,j])
+
+        bool first_occurence = False
+        collision_with_pos = []
+
+        for i in range(len(all_rocks_positions)):
+            rock_i_pos = all_rocks_positions[i]
+            if rock_i_pos ==current_pos and first_occurence==True:
+                colision_with_pos.append(rock_i_pos)
+            elif rock_i_pos==current_pos and first_occurence==False
+                first_occurence=True
+            else:
+                dist_i_j = calculateDistance(rock_i_pos, current_pos)
+                if dist_i_j < delta_distance:
+                    collision_with_pos.append(rock_i_pos)
+                    
+        print("Colisions with positions:", collision_with_pos)
+            
+                
+        
+        # TODO: separate
     
     def alignment():
         """  steer towards the average heading of neighbours """
@@ -31,9 +64,10 @@ class Boid():
     #     # TODO
     
     ######## practic aici va fi algoritmul de flocking
-    def getNewPos(current_position, all_rocks_positions):
+    def getNewPos(current_pos, all_rocks_positions):
         """ get the new position where the boid needs to move to """
-        pass
+        separation(current_pos, all_rocks_positions)
+        
         # TODO
     
     @property
