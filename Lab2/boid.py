@@ -20,16 +20,21 @@ class Boid():
         pass
         # TODO
     
-    def moveTo(self, new_x, new_y):
-        """ move towards position new_x, new_y """
-        pass
-        # TODO
+    # def moveTo(self, new_x, new_y):
+    #     """ move towards position new_x, new_y """
+    #     pass
+    #     # TODO
     
-    def moveBy(self, offset_x, offset_y):
-        """ move by offset_x and offset_y """
+    # def moveBy(self, offset_x, offset_y):
+    #     """ move by offset_x and offset_y """
+    #     pass
+    #     # TODO
+    
+    ######## practic aici va fi algoritmul de flocking
+    def getNewPos(current_position, all_rocks_positions):
+        """ get the new position where the boid needs to move to """
         pass
         # TODO
-        
     
     @property
     def x(self):

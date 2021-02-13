@@ -1,0 +1,3 @@
+('rock position:', [22, 75])
+('all_rocks_positions:', [[22, 75], [90, 170], [650, 223], [114, 236]])
+('rock position:', [89, 172])
