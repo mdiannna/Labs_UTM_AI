@@ -99,6 +99,8 @@ class Boid:
         self.max_velocity = 2
         self.max_force = 0.25
         self.perception = 160
+        self.behaviour_driver = BehaviourChangeDriver('normal')
+        self.delta_s_change_behaviour = 7 #will change bbehaviour every 7 seconds
 
         # self.vel = np.array([vel[0],vel[1]])
         self.angle = ang
@@ -298,9 +300,9 @@ class Boid:
 
 
 
-    def attacking_behaviour(self, other_objects):
+    def attacking_behaviour(self, other_objects, coef_steer=2):
         cohesion_steer = self.cohesion(other_objects, delta_force=4)
-        self.add_steer(cohesion_steer)
+        self.add_steer(cohesion_steer*2)
         
 
 
@@ -325,15 +327,26 @@ class Boid:
         # all_positions = get_all_positions(rock_group)
         # print("all_positions:", all_positions)
 
+        
+        # print("time:", time.time())
+        # print("changed:", self.behaviour_driver.last_time_behaviour_changed)
+
+        if time.time() - self.behaviour_driver.last_time_behaviour_changed >=self.delta_s_change_behaviour:
+            self.behaviour_driver.change_behaviour()
+            self.behaviour_driver.last_time_behaviour_changed = time.time()
+            print("current beh:", self.behaviour_driver.behaviour)
+
+
+        if self.behaviour_driver.behaviour=="attacking":
+            self.attacking_behaviour(other_objects)
+
+        elif self.behaviour_driver.behaviour=="evading":
+            # TODO
+            pass
+        
+        
         # getNewPos(self.pos, all_positions)
         self.flocking_behaviour(all_boids)
-
-
-        #TODO!!!        
-        # if time.time() - self.last_time_beh_changed >=12:
-        self.attacking_behaviour(other_objects)
-            
-
 
         self.pos = (Vector(*self.pos) + Vector(*self.vel)).to_list()
         self.vel  = (Vector(*self.vel) + Vector(*self.acceleration)).to_list()
@@ -369,6 +382,18 @@ class Boid:
             return True
         else:
             return False
+
+    # def change_behaviour(self):
+    #     old_behaviour = self.behaviour
+    #     possible_behaviours = ["normal", "attacking", "evading"]
+
+    #     while new_behaviour==self.behaviour:
+    #         new_behaviour = random.choice(possible_behaviours)
+
+    #     self.behaviour = new_behaviour
+    #     print("Behaviour changed to: <<", self.behaviour, ">>")
+
+
 
 
 
