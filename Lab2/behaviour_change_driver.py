@@ -1,7 +1,7 @@
 import time
 import random
 
-""" Singleton class to Driverister behaviour changes"""
+""" Singleton class to Driver behaviour changes"""
 class BehaviourChangeDriver:
     class __BehaviourChangeDriver:
         def __init__(self, arg):
