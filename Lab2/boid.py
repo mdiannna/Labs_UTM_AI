@@ -42,15 +42,23 @@ class Vector( object ):
         
     def __str__(self):
         return str(list(self.data))
+
+    def norm(self, p=2):
+        # result = 
+        sum = 0
+        for x in self.data:
+            sum += self.data[i]**p
         
+        return sum**(1/p)
+             
     def to_list(self):
         return list(self.data)
 
 
 # a = Vector(1,2)    
-b = Vector(2,2)    
-print("B:", b)
-print(b/2)
+# b = Vector(2,2)    
+# print("B:", b)
+# print(b/2)
 # print(b - a)
 
 # print(a)
@@ -65,6 +73,8 @@ class Boid:
         # self.pos =  np.array([pos[0],pos[1]])
         self.pos = [pos[0],pos[1]]
         self.vel = [vel[0],vel[1]]
+        # TODO:adjust as needed
+        self.max_velocity = 20
         # self.vel = np.array([vel[0],vel[1]])
         self.angle = ang
         self.angle_vel = ang_vel
@@ -75,6 +85,8 @@ class Boid:
         self.lifespan = info.get_lifespan()
         self.animated = info.get_animated()
         self.age = 0
+        self.perception = 100
+
         if sound:
             sound.rewind()
             sound.play()
@@ -92,18 +104,18 @@ class Boid:
         else:
             canvas.draw_image(self.image, self.image_center, self.image_size, self.pos, self.image_size, self.angle)
     
-    def separation(self, all_positions):
+    def separation(self, all_boids):
         """ steer to avoid crowding neighbours (short range repulsion) """
         #min distance between rocks required
-        delta_distance = 100
+        delta_distance = 120
         steer_vector = Vector(0, 0) # must be 2D vector
         avg_steer = Vector(0,0)
         steering = Vector(0,0)
 
         cnt_close_neigh = 0
+        all_positions = get_all_positions(all_boids)
 
-        for i in range(len(all_positions)):
-            rock_i_pos = all_positions[i]
+        for rock_i_pos in all_positions:
             dist_i_j = calculateDistance(rock_i_pos, self.pos)
 
             if dist_i_j>0 and dist_i_j < delta_distance:
@@ -116,29 +128,48 @@ class Boid:
                 
                 print("type diff:", type(diff))
                 print("diff:", diff)
-                steer_vector = steer_vector + diff
+                # steer_vector = steer_vector + diff
 
                 # print(type(steer_vector))
-                print("!!!! steer vector:", steer_vector)
+                # print("!!!! steer vector:", steer_vector)
                 cnt_close_neigh +=1
             
         if cnt_close_neigh > 0:
             avg_steer /= cnt_close_neigh    
-        
+
             #TODO: more
             steering = avg_steer - Vector(*self.vel)
-
-                                
 
         # print("Colisions with positions:", collision_with_pos)
         # print("!!!! steer vector:", steer_vector)
         # return steer_vector
         return steering
 
-    def alignment(self):
+
+    #     Notice that in the loop for all the boids, we only look for boids at a certain distance —
+    # that distance we call the
+    # self.perception
+    # (here it is equal to 100).
+    def alignment(self, boids):
         """  steer towards the average heading of neighbours """
-        pass
-        # TODO
+        avg_vector = Vector(0,0)
+        steering = Vector(0,0)
+        cnt_boids_in_perception = 0
+
+        for boid in boids:
+            if (Vector(*boid.pos)-Vector(*self.pos)).norm() < self.perception:
+                avg_vector += Vector(*boid.velocity)
+                cnt_boids_in_perception +=1
+
+        if cnt_boids_in_perception>0:
+            avg_vector = avg_vector / cnt_boids_in_perception
+            avg_vec_normalized = (avg_vector / avg_vector.norm()) 
+            steering = avg_vec_normalized * self.max_speed - self.velocity
+        
+        return steering
+
+
+
 
     def cohesion(self):
         """ steer to move towards average position of neighbours (long range attraction) """
@@ -190,7 +221,7 @@ class Boid:
         # TODO: finish
 
 
-    def update(self, all_positions):
+    def update(self, all_boids):
         ###################!!!!
         # old code
         # for i in range(DIMENSIONS):
@@ -213,7 +244,7 @@ class Boid:
         # getNewPos(self.pos, all_positions)
 
 
-        self.flocking_behaviour(all_positions)
+        self.flocking_behaviour(all_boids)
         self.keep_on_screen()
         # #############
             
@@ -306,12 +337,3 @@ class Boid:
 #     return new_sprite_group
     
 ###########################################################
-
-##########################################
-
-# Mini-Project 8: RiceRocks
-
-# I used Google Chrome Version 38.0.2125.111 m and 38.0.2125.122 m
-# The sounds played quite nicely :)
-# I've choosen some images that are given in comments above each image, for some personalization
-# On less performant computers the game may perform slower
