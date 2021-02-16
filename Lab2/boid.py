@@ -37,8 +37,18 @@ class Vector( object ):
     
     def __div__(self, coefficient):
         new_data = map(lambda x: x/coefficient, self.data)
-
         return Vector(*new_data)
+    
+    def __mul__(self, coefficient):
+        new_data = map(lambda x: x*coefficient, self.data)
+        return Vector(*new_data)
+    
+    def __rmul__(self, coefficient):
+        new_data = map(lambda x: coefficient*x, self.data)
+        return Vector(*new_data)
+    
+    
+
         
     def __str__(self):
         return str(list(self.data))
@@ -47,7 +57,7 @@ class Vector( object ):
         # result = 
         sum = 0
         for x in self.data:
-            sum += self.data[i]**p
+            sum += x**p
         
         return sum**(1/p)
              
@@ -74,7 +84,7 @@ class Boid:
         self.pos = [pos[0],pos[1]]
         self.vel = [vel[0],vel[1]]
         # TODO:adjust as needed
-        self.max_velocity = 20
+        self.max_velocity = 5
         # self.vel = np.array([vel[0],vel[1]])
         self.angle = ang
         self.angle_vel = ang_vel
@@ -85,7 +95,7 @@ class Boid:
         self.lifespan = info.get_lifespan()
         self.animated = info.get_animated()
         self.age = 0
-        self.perception = 100
+        self.perception = 120
 
         if sound:
             sound.rewind()
@@ -158,13 +168,13 @@ class Boid:
 
         for boid in boids:
             if (Vector(*boid.pos)-Vector(*self.pos)).norm() < self.perception:
-                avg_vector += Vector(*boid.velocity)
+                avg_vector += Vector(*boid.vel)
                 cnt_boids_in_perception +=1
 
         if cnt_boids_in_perception>0:
             avg_vector = avg_vector / cnt_boids_in_perception
             avg_vec_normalized = (avg_vector / avg_vector.norm()) 
-            steering = avg_vec_normalized * self.max_speed - self.velocity
+            steering = avg_vec_normalized * (self.max_velocity/2) - Vector(*self.vel)
         
         return steering
 
@@ -204,13 +214,18 @@ class Boid:
                 self.pos[i] -= min(-1, int(steer[i]))
 
     ## Change later all_positions to neighbor_boids_positions
-    def flocking_behaviour(self, all_positions):
-        steer = self.separation(all_positions)
-        print("steer:", steer)
+    def flocking_behaviour(self, all_boids):
+        # steer = self.separation(all_boids)
+        # print("steer:", steer)
         
-        # self.add_steer(steer)
-        self.add_negative_steer(steer)
+        # # self.add_steer(steer)
+        # self.add_negative_steer(steer)
 
+        
+        steer = self.alignment(all_boids)
+        # print("steer:", steer)
+        
+        self.add_steer(steer)
         
         # TODO:
         # steer = self.cohesion(all_positions)

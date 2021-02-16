@@ -1,4 +1,3 @@
-
 # https://stackoverflow.com/questions/534855/subtracting-2-lists-in-python
 class Vector( object ):
     def __init__(self, *data):
@@ -21,9 +20,16 @@ class Vector( object ):
     
     def __div__(self, coefficient):
         new_data = map(lambda x: x/coefficient, self.data)
-
         return Vector(*new_data)
-        
+    
+    def __mul__(self, coefficient):
+        new_data = map(lambda x: x*coefficient, self.data)
+        return Vector(*new_data)
+    
+    def __rmul__(self, coefficient):
+        new_data = map(lambda x: coefficient*x, self.data)
+        return Vector(*new_data)
+            
     def __str__(self):
         return str(list(self.data))
 
@@ -31,7 +37,7 @@ class Vector( object ):
         # result = 
         sum = 0
         for x in self.data:
-            sum += self.data[i]**p
+            sum += x**p
         
         return sum**(1/p)
              
