@@ -145,11 +145,21 @@ class Boid:
 
             
             # if dist_i_j!=0 and dist_i_j < delta_distance:
-            if self.pos!=rock_i_pos and dist_i_j < delta_distance and dist_i_j!=0:
+            if self.pos!=rock_i_pos and dist_i_j < delta_distance:
                 # TODO: process and add to steer_vector!
                 # print("!Colision at", rock_i_pos, "  ",  self.pos)
                 # steer_vector = Vector(steer_vector) - Vector(Vector(*rock_i_pos) - Vector(*self.pos))
-                diff = Vector(*self.pos) - Vector(*rock_i_pos) - self.radius * Vector(2,2)
+
+
+                #If rocks are intersecting, we consider the distance to be very very small, while the "diff" will still be the distance btw centers
+                # so that the final "force" will be big
+                if dist_i_j==0: #means rocks are intersecting
+                    small_dist = 0.000001
+                    dist_i_j = small_dist
+                    diff = Vector(*self.pos) - Vector(*rock_i_pos)
+                else:
+                    diff = Vector(*self.pos) - Vector(*rock_i_pos) - self.radius * Vector(2,2)
+
                 diff /= dist_i_j
                 avg_steer += diff
                 
@@ -278,11 +288,11 @@ class Boid:
         cohesion_steer = self.cohesion(all_boids)
         sep_steer = self.separation(all_boids)
         
-        # self.add_steer(align_steer)
-        # self.add_steer(cohesion_steer)
+        self.add_steer(align_steer)
+        self.add_steer(cohesion_steer)
         # self.add_negative_steer(sep_steer*4)
         # self.add_negative_steer(sep_steer)
-        self.add_steer(sep_steer)
+        self.add_steer(sep_steer*2)
 
 
         # print("steer:", steer)
