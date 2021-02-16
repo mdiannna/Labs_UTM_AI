@@ -303,10 +303,14 @@ class Boid:
     def attacking_behaviour(self, other_objects, coef_steer=2):
         cohesion_steer = self.cohesion(other_objects, delta_force=4)
         self.add_steer(cohesion_steer*2)
+
+    def evading_behaviour(self, other_objects, coef_steer=2):
+        separation_steer = self.separation(other_objects)
+        self.add_steer(separation_steer*4)
         
 
 
-    def update(self, all_boids, other_objects, behaviour="normal"):
+    def update(self, all_boids, ship, other_objects, behaviour="normal"):
         """ behaviour can be normal, attacking or evading"""
         ###################!!!!
         # old code
@@ -338,15 +342,14 @@ class Boid:
 
 
         if self.behaviour_driver.behaviour=="attacking":
-            self.attacking_behaviour(other_objects)
+            self.attacking_behaviour([ship])
 
         elif self.behaviour_driver.behaviour=="evading":
-            # TODO
-            pass
+            self.evading_behaviour(other_objects)
         
-        
-        # getNewPos(self.pos, all_positions)
         self.flocking_behaviour(all_boids)
+
+
 
         self.pos = (Vector(*self.pos) + Vector(*self.vel)).to_list()
         self.vel  = (Vector(*self.vel) + Vector(*self.acceleration)).to_list()
