@@ -11,20 +11,32 @@ class Vector( object ):
     
     def __add__(self, other):
         # return tuple( (a+b for a,b in zip(self.data, other.data) ) )  
-        return list( (a+b for a,b in zip(self.data, other.data) ) )  
+        return Vector(*list( (a+b for a,b in zip(self.data, other.data) ) ) )
         #return Vector( (a+b for a,b in zip(self.data, other.data) ) )  
 
     def __sub__(self, other):
         # return tuple( (a-b for a,b in zip(self.data, other.data) ) )
         #return list( (a-b for a,b in zip(self.data, other.data) ) )
-        return Vector(tuple(a-b for a,b in zip(self.data, other.data) ) )
+        return Vector(*list(a-b for a,b in zip(self.data, other.data) ) )
+    
+    def __div__(self, coefficient):
+        new_data = map(lambda x: x/coefficient, self.data)
+
+        return Vector(*new_data)
         
     def __str__(self):
         return str(list(self.data))
+
+    def norm(self, p=2):
+        # result = 
+        sum = 0
+        for x in self.data:
+            sum += self.data[i]**p
         
+        return sum**(1/p)
+             
     def to_list(self):
         return list(self.data)
-   
 
 a = Vector(1,2)    
 b = Vector(2,2)    
@@ -34,3 +46,5 @@ print(a)
 print(a.to_list())
 print(type(a))
 print(type(b-a))
+print("b:", b)
+print("norml of b:", b.norm())

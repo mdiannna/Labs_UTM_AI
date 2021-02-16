@@ -21,3 +21,9 @@ Colisions with positions: []
 rock position: [743, 409]
 all_rocks_positions: [[698, 362], [553, 167], [421, 41], [644, 341], [743, 409], [342, 158], [615, 457], [310, 486], [209, 203], [97, 452], [789, 52], [767, 526]]
 Colisions with positions: [[698, 362]]
+
+
+
+New pos: [566, 238]
+New pos: [589, 201]
+distance:

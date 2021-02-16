@@ -7,7 +7,7 @@ from math import sqrt
 
 def calculateDistance(pos1, pos2, distance="euclidean"):
         """ calculates the distance between 2 objects """
-        dist = sqrt((pos1[0]-pos2[0])^2 + (pos1[1]-pos2[1])^2)
+        dist = sqrt((pos1[0]-pos2[0])**2 + (pos1[1]-pos2[1])**2)
         return dist
 
 
@@ -34,16 +34,23 @@ class Vector( object ):
         # return tuple( (a-b for a,b in zip(self.data, other.data) ) )
         #return list( (a-b for a,b in zip(self.data, other.data) ) )
         return Vector(*list(a-b for a,b in zip(self.data, other.data) ) )
+    
+    def __div__(self, coefficient):
+        new_data = map(lambda x: x/coefficient, self.data)
+
+        return Vector(*new_data)
         
     def __str__(self):
         return str(list(self.data))
         
     def to_list(self):
         return list(self.data)
-   
+
 
 # a = Vector(1,2)    
-# b = Vector(2,2)    
+b = Vector(2,2)    
+print("B:", b)
+print(b/2)
 # print(b - a)
 
 # print(a)
@@ -88,8 +95,12 @@ class Boid:
     def separation(self, all_positions):
         """ steer to avoid crowding neighbours (short range repulsion) """
         #min distance between rocks required
-        delta_distance = 5
+        delta_distance = 100
         steer_vector = Vector(0, 0) # must be 2D vector
+        avg_steer = Vector(0,0)
+        steering = Vector(0,0)
+
+        cnt_close_neigh = 0
 
         for i in range(len(all_positions)):
             rock_i_pos = all_positions[i]
@@ -97,55 +108,88 @@ class Boid:
 
             if dist_i_j>0 and dist_i_j < delta_distance:
                 # TODO: process and add to steer_vector!
-                print("!Colision")
+                print("!Colision at", rock_i_pos, "  ",  self.pos)
                 # steer_vector = Vector(steer_vector) - Vector(Vector(*rock_i_pos) - Vector(*self.pos))
                 diff = Vector(*rock_i_pos) - Vector(*self.pos)
+                diff /= dist_i_j
+                avg_steer += diff
+                
                 print("type diff:", type(diff))
                 print("diff:", diff)
-                steer_vector = steer_vector - diff
+                steer_vector = steer_vector + diff
 
                 # print(type(steer_vector))
                 print("!!!! steer vector:", steer_vector)
+                cnt_close_neigh +=1
+            
+        if cnt_close_neigh > 0:
+            avg_steer /= cnt_close_neigh    
+        
+            #TODO: more
+            steering = avg_steer - Vector(*self.vel)
 
                                 
 
         # print("Colisions with positions:", collision_with_pos)
         # print("!!!! steer vector:", steer_vector)
-        return steer_vector
+        # return steer_vector
+        return steering
 
-    def alignment():
+    def alignment(self):
         """  steer towards the average heading of neighbours """
         pass
         # TODO
 
-    def cohesion():
+    def cohesion(self):
         """ steer to move towards average position of neighbours (long range attraction) """
         pass
         # TODO
+    
+    def keep_on_screen(self):
+        """ Keeps the object inside visible screen """
+        for i in range(DIMENSIONS):
+            self.pos[i] %= CANVAS_RES[i]      
 
 
     def add_steer(self, steer):
         if type(steer)==Vector:
             steer = steer.to_list()
 
-        self.pos[0] += steer[0]
-        self.pos[1] += steer[1]
+        for i in range(DIMENSIONS):
+            if steer[i]>0:
+                self.pos[i] += max(1, int(steer[i]))
+            elif steer[i]<0:
+                self.pos[i] += min(-1, int(steer[i]))
+
+
+    def add_negative_steer(self, steer):
+        if type(steer)==Vector:
+            steer = steer.to_list()
+    
+        for i in range(DIMENSIONS):    
+            if steer[i]>0:
+                    self.pos[i] -= max(1, int(steer[i]))
+            elif steer[i]<0:
+                self.pos[i] -= min(-1, int(steer[i]))
 
     ## Change later all_positions to neighbor_boids_positions
     def flocking_behaviour(self, all_positions):
         steer = self.separation(all_positions)
+        print("steer:", steer)
         
-        self.add_steer(steer)
+        # self.add_steer(steer)
+        self.add_negative_steer(steer)
+
         
         # TODO:
         # steer = self.cohesion(all_positions)
         # self.add_steer(steer)
         
-        print("New pos:", self.pos)
+        # print("New pos:", self.pos)
         
         # TODO: finish
 
-  
+
     def update(self, all_positions):
         ###################!!!!
         # old code
@@ -170,6 +214,7 @@ class Boid:
 
 
         self.flocking_behaviour(all_positions)
+        self.keep_on_screen()
         # #############
             
         # self.angle += self.angle_vel 
@@ -261,3 +306,12 @@ class Boid:
 #     return new_sprite_group
     
 ###########################################################
+
+##########################################
+
+# Mini-Project 8: RiceRocks
+
+# I used Google Chrome Version 38.0.2125.111 m and 38.0.2125.122 m
+# The sounds played quite nicely :)
+# I've choosen some images that are given in comments above each image, for some personalization
+# On less performant computers the game may perform slower

@@ -11,3 +11,8 @@ Note: run on https://py3.codeskulptor.org/ to run faster with python3!
 
 ## Separation
 we want this rule to give us a vector which when added to the current position moves a boid away from those near it.
+
+
+## Bibliography
+- https://en.wikipedia.org/wiki/Norm_(mathematics)
+- https://math.wikia.org/ro/wiki/Norma_unui_vector
