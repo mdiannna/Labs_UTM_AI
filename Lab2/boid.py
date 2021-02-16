@@ -181,11 +181,32 @@ class Boid:
 
 
 
-    def cohesion(self):
+    def cohesion(self, all_boids):
         """ steer to move towards average position of neighbours (long range attraction) """
-        pass
-        # TODO
-    
+        steering = Vector(0,0)
+        cnt_boids_in_perception = 0
+        center_mass = Vector(0,0)
+
+        for boid in all_boids:
+            if (Vector(*boid.pos)-Vector(*self.pos)).norm() < self.perception:
+                center_mass += Vector(*boid.pos)
+                cnt_boids_in_perception +=1
+        
+        if cnt_boids_in_perception>0:
+            center_mass = center_mass / cnt_boids_in_perception
+            diff_to_center_vect = center_mass - Vector(*self.pos)
+            
+            if diff_to_center_vect.norm() >0:
+                diff_to_center_vect = (diff_to_center_vect/diff_to_center_vect.norm()) * self.max_velocity
+            
+            steering = diff_to_center_vect - Vector(*self.vel)
+
+            # if steering.norm() > self.max_force:
+            #     steering = (steering / steering.norm()) * self.max_force
+        
+        return steering
+
+
     def keep_on_screen(self):
         """ Keeps the object inside visible screen """
         for i in range(DIMENSIONS):
@@ -216,24 +237,20 @@ class Boid:
     ## Change later all_positions to neighbor_boids_positions
     def flocking_behaviour(self, all_boids):
         # steer = self.separation(all_boids)
-        # print("steer:", steer)
+        # # print("steer:", steer)
         
-        # # self.add_steer(steer)
+        # ##self.add_steer(steer)
         # self.add_negative_steer(steer)
 
         
-        steer = self.alignment(all_boids)
-        # print("steer:", steer)
+        # steer = self.alignment(all_boids)
+        # # print("steer:", steer)
         
-        self.add_steer(steer)
-        
-        # TODO:
-        # steer = self.cohesion(all_positions)
         # self.add_steer(steer)
         
-        # print("New pos:", self.pos)
+        steer = self.cohesion(all_boids)
+        self.add_steer(steer)
         
-        # TODO: finish
 
 
     def update(self, all_boids):
