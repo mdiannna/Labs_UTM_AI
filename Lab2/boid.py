@@ -2,6 +2,7 @@
 
 ############### Code for flocking behaviour ############3
 from math import dist, sqrt
+import time
 # import numpy as np
 
 
@@ -97,7 +98,7 @@ class Boid:
         # TODO:adjust as needed
         self.max_velocity = 2
         self.max_force = 0.25
-        self.perception = 130
+        self.perception = 160
 
         # self.vel = np.array([vel[0],vel[1]])
         self.angle = ang
@@ -215,7 +216,7 @@ class Boid:
 
 
 
-    def cohesion(self, all_boids):
+    def cohesion(self, all_boids, delta_force=-0.01):
         """ steer to move towards average position of neighbours (long range attraction) """
         steering = Vector(0,0)
         cnt_boids_in_perception = 0
@@ -238,7 +239,7 @@ class Boid:
             
             steering = diff_to_center_vect - Vector(*self.vel)
         
-        steering = self.adjust_steering_force(steering, delta_force=-0.01)
+        steering = self.adjust_steering_force(steering, delta_force=delta_force)
         
         return steering
 
@@ -292,17 +293,19 @@ class Boid:
         self.add_steer(cohesion_steer)
         # self.add_negative_steer(sep_steer*4)
         # self.add_negative_steer(sep_steer)
+        self.add_steer(sep_steer)
         self.add_steer(sep_steer*2)
 
 
-        # print("steer:", steer)
+
+    def attacking_behaviour(self, other_objects):
+        cohesion_steer = self.cohesion(other_objects, delta_force=4)
+        self.add_steer(cohesion_steer)
         
-        ##self.add_steer(steer)
-
-        
 
 
-    def update(self, all_boids):
+    def update(self, all_boids, other_objects, behaviour="normal"):
+        """ behaviour can be normal, attacking or evading"""
         ###################!!!!
         # old code
         # for i in range(DIMENSIONS):
@@ -324,6 +327,12 @@ class Boid:
 
         # getNewPos(self.pos, all_positions)
         self.flocking_behaviour(all_boids)
+
+
+        #TODO!!!        
+        # if time.time() - self.last_time_beh_changed >=12:
+        self.attacking_behaviour(other_objects)
+            
 
 
         self.pos = (Vector(*self.pos) + Vector(*self.vel)).to_list()
