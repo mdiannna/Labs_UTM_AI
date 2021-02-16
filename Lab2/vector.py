@@ -60,3 +60,5 @@ print(type(b-a))
 print("b:", b)
 print("norml of b:", b.norm())
 print("b is negative?", b.is_negative())
+
+
