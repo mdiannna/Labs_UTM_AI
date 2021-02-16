@@ -29,7 +29,7 @@ class Vector( object ):
     def __rmul__(self, coefficient):
         new_data = map(lambda x: coefficient*x, self.data)
         return Vector(*new_data)
-            
+        
     def __str__(self):
         return str(list(self.data))
 
@@ -40,6 +40,11 @@ class Vector( object ):
             sum += x**p
         
         return sum**(1/p)
+    
+    
+    def is_negative(self):
+        """ returns boolean, true if is negative """
+        return (self.norm()<0)
              
     def to_list(self):
         return list(self.data)
@@ -54,3 +59,4 @@ print(type(a))
 print(type(b-a))
 print("b:", b)
 print("norml of b:", b.norm())
+print("b is negative?", b.is_negative())

@@ -1,7 +1,7 @@
 ### https://py3.codeskulptor.org/
 
 ############### Code for flocking behaviour ############3
-from math import sqrt
+from math import dist, sqrt
 # import numpy as np
 
 
@@ -14,8 +14,9 @@ def calcDistance(pos1, pos2, distance="euclidean"):
 def calcDistanceWithRadius(pos1, pos2, radius, distance="euclidean"):
         """ calculates the distance between 2 objects """
 
-        dist = sqrt((pos1[0]-pos2[0])**2 + (pos1[1]-pos2[1])**2) - 2*radius -1
-        return dist
+        dist = sqrt((pos1[0]-pos2[0])**2 + (pos1[1]-pos2[1])**2) - 2*radius
+        #verify not to be negative distance
+        return max(0,dist)
 
 
 # print(calcDistance([704, 473], [680, 333]))
@@ -53,9 +54,6 @@ class Vector( object ):
     def __rmul__(self, coefficient):
         new_data = map(lambda x: coefficient*x, self.data)
         return Vector(*new_data)
-    
-    
-
         
     def __str__(self):
         return str(list(self.data))
@@ -67,6 +65,11 @@ class Vector( object ):
             sum += x**p
         
         return sum**(1/p)
+    
+    
+    def is_negative(self):
+        """ returns boolean, true if is negative """
+        return (self.norm()<0)
              
     def to_list(self):
         return list(self.data)
@@ -92,9 +95,9 @@ class Boid:
         self.vel = [vel[0],vel[1]]
         self.acceleration = [0,0]
         # TODO:adjust as needed
-        self.max_velocity = 3
+        self.max_velocity = 2
         self.max_force = 0.25
-        self.perception = 150
+        self.perception = 130
 
         # self.vel = np.array([vel[0],vel[1]])
         self.angle = ang
@@ -102,7 +105,7 @@ class Boid:
         self.image = image
         self.image_center = info.get_center()
         self.image_size = info.get_size()
-        self.radius = info.get_radius() + 1
+        self.radius = info.get_radius()
         self.lifespan = info.get_lifespan()
         self.animated = info.get_animated()
         self.age = 0
@@ -140,12 +143,13 @@ class Boid:
             # dist_i_j = calcDistance(rock_i_pos, self.pos)
             dist_i_j = calcDistanceWithRadius(rock_i_pos, self.pos, self.radius)
 
-
-            if dist_i_j!=0 and dist_i_j < delta_distance:
+            
+            # if dist_i_j!=0 and dist_i_j < delta_distance:
+            if self.pos!=rock_i_pos and dist_i_j < delta_distance and dist_i_j!=0:
                 # TODO: process and add to steer_vector!
                 # print("!Colision at", rock_i_pos, "  ",  self.pos)
                 # steer_vector = Vector(steer_vector) - Vector(Vector(*rock_i_pos) - Vector(*self.pos))
-                diff = Vector(*rock_i_pos) - Vector(*self.pos)
+                diff = Vector(*self.pos) - Vector(*rock_i_pos) - self.radius * Vector(2,2)
                 diff /= dist_i_j
                 avg_steer += diff
                 
@@ -217,7 +221,7 @@ class Boid:
         
         if cnt_boids_in_perception>0:
             center_mass = center_mass / cnt_boids_in_perception
-            diff_to_center_vect = center_mass - Vector(*self.pos)
+            diff_to_center_vect = center_mass - Vector(*self.pos)  - self.radius * Vector(1,1)
             
             if diff_to_center_vect.norm() >0:
                 diff_to_center_vect = (diff_to_center_vect/diff_to_center_vect.norm()) * self.max_velocity
@@ -249,6 +253,7 @@ class Boid:
         for i in range(DIMENSIONS):
             if steer[i]>0:
                 self.acceleration[i] += max(1, int(steer[i]))
+                
             elif steer[i]<0:
                 self.acceleration[i] += min(-1, int(steer[i]))
 
@@ -263,6 +268,8 @@ class Boid:
             elif steer[i]<0:
                 self.acceleration[i] -= min(-1, int(steer[i]))
 
+        
+
     ## Change later all_positions to neighbor_boids_positions
     def flocking_behaviour(self, all_boids):
         
@@ -271,12 +278,11 @@ class Boid:
         cohesion_steer = self.cohesion(all_boids)
         sep_steer = self.separation(all_boids)
         
-        self.add_steer(align_steer)
-        self.add_steer(cohesion_steer)
+        # self.add_steer(align_steer)
+        # self.add_steer(cohesion_steer)
         # self.add_negative_steer(sep_steer*4)
-        self.add_negative_steer(sep_steer)
-
-        # self.add_steer(sep_steer)
+        # self.add_negative_steer(sep_steer)
+        self.add_steer(sep_steer)
 
 
         # print("steer:", steer)
