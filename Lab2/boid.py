@@ -5,13 +5,20 @@ from math import sqrt
 # import numpy as np
 
 
-def calculateDistance(pos1, pos2, distance="euclidean"):
+def calcDistance(pos1, pos2, distance="euclidean"):
         """ calculates the distance between 2 objects """
         dist = sqrt((pos1[0]-pos2[0])**2 + (pos1[1]-pos2[1])**2)
         return dist
 
 
-# print(calculateDistance([704, 473], [680, 333]))
+def calcDistanceWithRadius(pos1, pos2, radius, distance="euclidean"):
+        """ calculates the distance between 2 objects """
+
+        dist = sqrt((pos1[0]-pos2[0])**2 + (pos1[1]-pos2[1])**2) - 2*radius -1
+        return dist
+
+
+# print(calcDistance([704, 473], [680, 333]))
 
 # https://stackoverflow.com/questions/534855/subtracting-2-lists-in-python
 
@@ -83,19 +90,22 @@ class Boid:
         # self.pos =  np.array([pos[0],pos[1]])
         self.pos = [pos[0],pos[1]]
         self.vel = [vel[0],vel[1]]
+        self.acceleration = [0,0]
         # TODO:adjust as needed
-        self.max_velocity = 5
+        self.max_velocity = 3
+        self.max_force = 0.25
+        self.perception = 150
+
         # self.vel = np.array([vel[0],vel[1]])
         self.angle = ang
         self.angle_vel = ang_vel
         self.image = image
         self.image_center = info.get_center()
         self.image_size = info.get_size()
-        self.radius = info.get_radius()
+        self.radius = info.get_radius() + 1
         self.lifespan = info.get_lifespan()
         self.animated = info.get_animated()
         self.age = 0
-        self.perception = 120
 
         if sound:
             sound.rewind()
@@ -117,7 +127,7 @@ class Boid:
     def separation(self, all_boids):
         """ steer to avoid crowding neighbours (short range repulsion) """
         #min distance between rocks required
-        delta_distance = 120
+        delta_distance = self.perception
         steer_vector = Vector(0, 0) # must be 2D vector
         avg_steer = Vector(0,0)
         steering = Vector(0,0)
@@ -126,18 +136,21 @@ class Boid:
         all_positions = get_all_positions(all_boids)
 
         for rock_i_pos in all_positions:
-            dist_i_j = calculateDistance(rock_i_pos, self.pos)
+            
+            # dist_i_j = calcDistance(rock_i_pos, self.pos)
+            dist_i_j = calcDistanceWithRadius(rock_i_pos, self.pos, self.radius)
 
-            if dist_i_j>0 and dist_i_j < delta_distance:
+
+            if dist_i_j!=0 and dist_i_j < delta_distance:
                 # TODO: process and add to steer_vector!
-                print("!Colision at", rock_i_pos, "  ",  self.pos)
+                # print("!Colision at", rock_i_pos, "  ",  self.pos)
                 # steer_vector = Vector(steer_vector) - Vector(Vector(*rock_i_pos) - Vector(*self.pos))
                 diff = Vector(*rock_i_pos) - Vector(*self.pos)
                 diff /= dist_i_j
                 avg_steer += diff
                 
-                print("type diff:", type(diff))
-                print("diff:", diff)
+                # print("type diff:", type(diff))
+                # print("diff:", diff)
                 # steer_vector = steer_vector + diff
 
                 # print(type(steer_vector))
@@ -153,6 +166,8 @@ class Boid:
         # print("Colisions with positions:", collision_with_pos)
         # print("!!!! steer vector:", steer_vector)
         # return steer_vector
+        steering = self.adjust_steering_force(steering)
+
         return steering
 
 
@@ -167,15 +182,20 @@ class Boid:
         cnt_boids_in_perception = 0
 
         for boid in boids:
-            if (Vector(*boid.pos)-Vector(*self.pos)).norm() < self.perception:
+            distance = calcDistanceWithRadius(boid.pos, self.pos, self.radius)
+            # if (Vector(*boid.pos)-Vector(*self.pos)).norm() < self.perception:
+            if (distance < self.perception):
+
                 avg_vector += Vector(*boid.vel)
                 cnt_boids_in_perception +=1
 
         if cnt_boids_in_perception>0:
             avg_vector = avg_vector / cnt_boids_in_perception
             avg_vec_normalized = (avg_vector / avg_vector.norm()) 
-            steering = avg_vec_normalized * (self.max_velocity/2) - Vector(*self.vel)
-        
+            steering = avg_vec_normalized * (self.max_velocity) - Vector(*self.vel)
+    
+        steering = self.adjust_steering_force(steering, delta_force=-0.01)
+
         return steering
 
 
@@ -188,7 +208,10 @@ class Boid:
         center_mass = Vector(0,0)
 
         for boid in all_boids:
-            if (Vector(*boid.pos)-Vector(*self.pos)).norm() < self.perception:
+            distance = calcDistanceWithRadius(boid.pos, self.pos, self.radius)
+            # if (Vector(*boid.pos)-Vector(*self.pos)).norm() < self.perception:
+            if (distance < self.perception):
+
                 center_mass += Vector(*boid.pos)
                 cnt_boids_in_perception +=1
         
@@ -200,12 +223,18 @@ class Boid:
                 diff_to_center_vect = (diff_to_center_vect/diff_to_center_vect.norm()) * self.max_velocity
             
             steering = diff_to_center_vect - Vector(*self.vel)
-
-            # if steering.norm() > self.max_force:
-            #     steering = (steering / steering.norm()) * self.max_force
+        
+        steering = self.adjust_steering_force(steering, delta_force=-0.01)
         
         return steering
 
+
+    def adjust_steering_force(self, steering, delta_force=0):
+        if steering.norm() > self.max_force:
+            steering = (steering / steering.norm()) * (self.max_force+delta_force)
+            
+        return steering
+        
 
     def keep_on_screen(self):
         """ Keeps the object inside visible screen """
@@ -219,9 +248,9 @@ class Boid:
 
         for i in range(DIMENSIONS):
             if steer[i]>0:
-                self.pos[i] += max(1, int(steer[i]))
+                self.acceleration[i] += max(1, int(steer[i]))
             elif steer[i]<0:
-                self.pos[i] += min(-1, int(steer[i]))
+                self.acceleration[i] += min(-1, int(steer[i]))
 
 
     def add_negative_steer(self, steer):
@@ -230,26 +259,30 @@ class Boid:
     
         for i in range(DIMENSIONS):    
             if steer[i]>0:
-                    self.pos[i] -= max(1, int(steer[i]))
+                    self.acceleration[i] -= max(1, int(steer[i]))
             elif steer[i]<0:
-                self.pos[i] -= min(-1, int(steer[i]))
+                self.acceleration[i] -= min(-1, int(steer[i]))
 
     ## Change later all_positions to neighbor_boids_positions
     def flocking_behaviour(self, all_boids):
-        # steer = self.separation(all_boids)
-        # # print("steer:", steer)
         
-        # ##self.add_steer(steer)
-        # self.add_negative_steer(steer)
+        
+        align_steer = self.alignment(all_boids)
+        cohesion_steer = self.cohesion(all_boids)
+        sep_steer = self.separation(all_boids)
+        
+        self.add_steer(align_steer)
+        self.add_steer(cohesion_steer)
+        # self.add_negative_steer(sep_steer*4)
+        self.add_negative_steer(sep_steer)
 
+        # self.add_steer(sep_steer)
+
+
+        # print("steer:", steer)
         
-        # steer = self.alignment(all_boids)
-        # # print("steer:", steer)
-        
-        # self.add_steer(steer)
-        
-        steer = self.cohesion(all_boids)
-        self.add_steer(steer)
+        ##self.add_steer(steer)
+
         
 
 
@@ -274,9 +307,19 @@ class Boid:
         # print("all_positions:", all_positions)
 
         # getNewPos(self.pos, all_positions)
-
-
         self.flocking_behaviour(all_boids)
+
+
+        self.pos = (Vector(*self.pos) + Vector(*self.vel)).to_list()
+        self.vel  = (Vector(*self.vel) + Vector(*self.acceleration)).to_list()
+        #limit
+        velocity_vect = Vector(*self.vel)
+        if velocity_vect.norm() > self.max_velocity:
+            self.vel = ((velocity_vect / velocity_vect.norm()) * self.max_velocity).to_list()
+
+        self.acceleration = [0,0]
+
+
         self.keep_on_screen()
         # #############
             
@@ -315,7 +358,7 @@ class Boid:
 #     len_all_pos = len(all_positions)
 #     for i in range(len_all_pos):
 #         for j in range(i+1, len_all_pos):
-#             dist_i_j = calculateDistance(all_positions[i], all_positions[j])
+#             dist_i_j = calcDistance(all_positions[i], all_positions[j])
 #             if dist_i_j < delta_distance:
 #                 close_rocks.append([i,j])
 
