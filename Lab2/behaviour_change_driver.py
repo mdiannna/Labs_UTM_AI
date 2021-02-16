@@ -1,9 +1,9 @@
 import time
 import random
 
-""" Singleton class to administer behaviour changes"""
-class BehaviourChangeAdmin:
-    class __BehaviourChangeAdmin:
+""" Singleton class to Driverister behaviour changes"""
+class BehaviourChangeDriver:
+    class __BehaviourChangeDriver:
         def __init__(self, arg):
             self.behaviour = arg
             self.last_time_behaviour_changed = time.time()
@@ -22,12 +22,12 @@ class BehaviourChangeAdmin:
     instance = None
 
     def __new__(cls, arg): # __new__ always a classmethod
-        if not BehaviourChangeAdmin.instance:
-            BehaviourChangeAdmin.instance = BehaviourChangeAdmin.__BehaviourChangeAdmin(arg)
+        if not BehaviourChangeDriver.instance:
+            BehaviourChangeDriver.instance = BehaviourChangeDriver.__BehaviourChangeDriver(arg)
         else:
-            BehaviourChangeAdmin.instance.behaviour = arg
+            BehaviourChangeDriver.instance.behaviour = arg
 
-        return BehaviourChangeAdmin.instance
+        return BehaviourChangeDriver.instance
 
     def __getattr__(self, name):
         return getattr(self.instance, name)
@@ -36,12 +36,12 @@ class BehaviourChangeAdmin:
         return setattr(self.instance, name)
     
     def change_behaviour(self):
-        BehaviourChangeAdmin.instance.change_behaviour()
+        BehaviourChangeDriver.instance.change_behaviour()
 
 
 # For testing:
 if __name__=="__main__":
-    x = BehaviourChangeAdmin('normal')
+    x = BehaviourChangeDriver('normal')
 
     # print(x.last_time_behaviour_changed)
     print("Initial behaviour:", x.behaviour)
