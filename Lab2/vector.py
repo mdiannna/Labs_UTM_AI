@@ -1,5 +1,5 @@
 ############################################################
-################        Vector.py            ###############
+################        vector.py            ###############
 ############################################################
 class Vector( object ):
     def __init__(self, *data):
@@ -62,19 +62,4 @@ class Vector( object ):
         """ convert vector to list """
         return list(self.data)
 
-############################################################
-
-
-a = Vector(1,2)    
-b = Vector(2,2)    
-print(b - a)
-
-print(a)
-print(a.to_list())
-print(type(a))
-print(type(b-a))
-print("b:", b)
-print("norml of b:", b.norm())
-print("b is negative?", b.is_negative())
-
-
+####################### end vector.py #######################
