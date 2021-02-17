@@ -16,3 +16,4 @@ we want this rule to give us a vector which when added to the current position m
 ## Bibliography
 - https://en.wikipedia.org/wiki/Norm_(mathematics)
 - https://math.wikia.org/ro/wiki/Norma_unui_vector
+- https://stackoverflow.com/questions/534855/subtracting-2-lists-in-python
