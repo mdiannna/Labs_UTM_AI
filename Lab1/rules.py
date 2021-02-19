@@ -20,13 +20,13 @@ interm_rule3 = IF( AND (
     '(?x) has 2 arms',
 ), THEN ('(?x) is a insectoid_like'))
 
-interm_rule3 = IF( AND (
+interm_rule4 = IF( AND (
     '(?x) has 4 legs',
     '(?x) has 4 arms',
 ), THEN ('(?x) is a spider_like'))
 
 
-intermediate_rules = [ interm_rule1, interm_rule2, interm_rule3 ] 
+intermediate_rules = [ interm_rule1, interm_rule2, interm_rule3, interm_rule4 ] 
 
 ###########################################
 
