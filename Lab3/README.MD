@@ -26,7 +26,7 @@ complex it is part of.
 For running the code, there are 2 options: 
 
 1. Running on Google Colab 
-2. Running with jupiter notebook
+2. Running with Jupyter notebook
 
 ### Running on Google Colab
 
@@ -59,3 +59,11 @@ Then, run all the cells from the notebook.
 ## Bibliography and resources
 - UTM Fundamentals of Artificial Intelligence Course
 - [https://jupyter.org/install](https://jupyter.org/install)
+- [https://seaborn.pydata.org/generated/seaborn.lineplot.html](https://seaborn.pydata.org/generated/seaborn.lineplot.html)
+- [https://seaborn.pydata.org/](https://seaborn.pydata.org/)
+- [https://seaborn.pydata.org/examples/many_pairwise_correlations.html](https://seaborn.pydata.org/examples/many_pairwise_correlations.html)
+- [https://seaborn.pydata.org/generated/seaborn.heatmap.html](https://seaborn.pydata.org/generated/seaborn.heatmap.html)
+- [https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html)
+- [https://towardsdatascience.com/linear-regression-in-6-lines-of-python-5e1d0cd05b8d](https://towardsdatascience.com/linear-regression-in-6-lines-of-python-5e1d0cd05b8d)
+- [https://scikit-learn.org/stable/modules/model_evaluation.html](https://scikit-learn.org/stable/modules/model_evaluation.html)
+
