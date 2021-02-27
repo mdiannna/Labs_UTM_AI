@@ -7,7 +7,7 @@
 * [Bibliography and resources](#bibliography-and-resources)
 
 ## Introduction
-This is the solution for the Laboratory Nr 3 for the Artificial Intelligence Fundamentals at the Technical University of Moldova. This projects presents a linear regression model for predicting the price of an apartment given a set of characteristics of the apartment
+This is the solution for the Laboratory Nr 3 for the Artificial Intelligence Fundamentals at the Technical University of Moldova. This project presents a linear regression model for predicting the price of an apartment given a set of characteristics of the apartment
 complex it is part of.
 
 
